@@ -8,12 +8,37 @@ class M_pengguna extends CI_Model {
 
      public function get_data_buku() {
     	// query
-        $sql = "SELECT a.*, b.nama_kategori, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
-                INNER JOIN tbl_kategori b on a.id_kategori = b.id_kategori
-                LEFT JOIN tbl_peminjaman c ON a.id_buku = c.id_buku
-                ORDER BY a.id_buku DESC LIMIT 5";
+        $sql = "SELECT a.*, d.nama_kategori, a.judul_buku, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
+                LEFT JOIN (
+                    SELECT id_buku, MAX(id_peminjaman) as id_peminjaman
+                    FROM tbl_peminjaman
+                    GROUP BY id_buku
+                ) b ON a.id_buku = b.id_buku
+                LEFT JOIN tbl_peminjaman c ON b.id_buku = c.id_buku
+                AND b.id_peminjaman = c.id_peminjaman
+                INNER JOIN tbl_kategori d ON a.id_kategori = d.id_kategori
+                ORDER BY a.id_buku DESC";
         // execute
         $query = $this->db->query($sql);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
+            $query->free_result();
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
+    public function get_data_pinjam($params) {
+        // query
+        $sql = "SELECT a.*, b.judul_buku, b.cover_buku, c.nama_kategori FROM tbl_peminjaman a
+                INNER JOIN tbl_buku b ON a.id_buku = b.id_buku
+                INNER JOIN tbl_kategori c ON c.id_kategori = b.id_kategori
+                WHERE id_pengguna = ? AND status_peminjaman = 'dipinjam'
+                ORDER BY id_peminjaman DESC";
+        // execute
+        $query = $this->db->query($sql, $params);
         // cek result
         if ($query->num_rows() > 0) {
             $result = $query->result_array();
@@ -78,7 +103,8 @@ class M_pengguna extends CI_Model {
     function get_id_peminjaman($params) {
         // query
         $sql = "SELECT id_peminjaman FROM tbl_peminjaman
-                WHERE id_pengguna = ? AND id_buku = ?";
+                WHERE id_pengguna = ? AND id_buku = ?
+                ORDER BY id_peminjaman DESC LIMIT 1";
         // execute
         $query = $this->db->query($sql, $params);
         // cek result

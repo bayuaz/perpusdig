@@ -40,7 +40,7 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped" id="table-b">
+                    <table class="table table-striped" id="table-buku">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>

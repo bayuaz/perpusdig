@@ -132,20 +132,26 @@ class Pengguna extends CI_Controller {
 			$where = ['id_peminjaman' => $id_peminjaman];
 
 			if ($this->M_pengguna->update_tbl_peminjaman($params, $where)) {
-				$this->session->set_userdata('success', 'Pinjam buku berhasil!');
-				redirect('pengguna/buku');
+				$this->session->set_userdata('success', 'Kembalikan buku berhasil!');
+				redirect('pengguna/pinjam');
 			} else {
-				$this->session->set_userdata('failed', 'Pinjam buku gagal!');
+				$this->session->set_userdata('failed', 'Kembalikan buku gagal!');
 				$this->buku();
 			}
 		} else {
-			$this->session->set_userdata('failed', 'Pinjam buku gagal!');
+			$this->session->set_userdata('failed', 'Kembalikan buku gagal!');
 			$this->buku();
 		}
 	}
 
 	public function pinjam() {
+		// get list data
+		$data['data_pinjam'] = $this->M_pengguna->get_data_pinjam(array($this->session->userdata('id')));
 
+		// get detail data
+		$data['detail_user_header'] = $this->M_pengguna->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+
+		$this->vic_lib->pview('index_pinjam', $data);
 	}
 
 	public function logout() {
