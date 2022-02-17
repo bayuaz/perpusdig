@@ -36,6 +36,17 @@ $(document).ready(function() {
 	    $('#hapus-tahun-terbit').val($(this).data('tahun-terbit')).change();
 	    $('#hapus-jumlah').val($(this).data('jumlah')).change();
   	});
+
+    $('.baca-buku').click(function() {
+        var path = $(this).data('file');
+        $('#source-file').attr('data', path);
+        $('#alt-file').attr('href', path);
+        $('.modal-title').text($(this).data('judul'));
+    });
+
+  	$(".file-kosong").click(function() {
+		swal('File Tidak Ada', 'File belum diunggah oleh Admin Perpustakaan!', 'error');
+	});
 });
 
 var cleaveDT = new Cleave('#tambah-tahun-terbit', {

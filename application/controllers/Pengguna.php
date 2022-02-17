@@ -36,6 +36,9 @@ class Pengguna extends CI_Controller {
 	public function buku() {
 		// get list data
 		$data['data_buku'] = $this->M_pengguna->get_data_buku();
+		// print_r($this->M_pengguna->get_data_buku());
+		// echo '<br><br>' . $this->session->userdata('id');die;
+
 
 		// get detail data
 		$data['detail_user_header'] = $this->M_pengguna->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));

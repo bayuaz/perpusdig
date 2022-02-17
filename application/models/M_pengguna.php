@@ -8,7 +8,7 @@ class M_pengguna extends CI_Model {
 
      public function get_data_buku() {
     	// query
-        $sql = "SELECT a.*, d.nama_kategori, a.judul_buku, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
+        $sql = "SELECT a.*, d.nama_kategori, a.judul_buku, c.id_pengguna, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
                 LEFT JOIN (
                     SELECT id_buku, MAX(id_peminjaman) as id_peminjaman
                     FROM tbl_peminjaman
@@ -32,7 +32,7 @@ class M_pengguna extends CI_Model {
 
     public function get_data_pinjam($params) {
         // query
-        $sql = "SELECT a.*, b.judul_buku, b.cover_buku, c.nama_kategori FROM tbl_peminjaman a
+        $sql = "SELECT a.*, b.judul_buku, b.cover_buku, b.file_buku, c.nama_kategori FROM tbl_peminjaman a
                 INNER JOIN tbl_buku b ON a.id_buku = b.id_buku
                 INNER JOIN tbl_kategori c ON c.id_kategori = b.id_kategori
                 WHERE id_pengguna = ? AND status_peminjaman = 'dipinjam'

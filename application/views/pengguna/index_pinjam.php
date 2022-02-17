@@ -71,7 +71,11 @@
                             </div>
                           </td>
                           <td>
-                            <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku"><i class="fas fa-book-reader"></i></a>
+                            <?php if (!empty($pinjam['file_buku'])) : ?>
+                            <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $pinjam['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$pinjam['file_buku']) ?>"><i class="fas fa-book-reader"></i></a>
+                            <?php else : ?>
+                            <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif; ?>
                             <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-denda="<?= $diff->invert > 0 ? rupiah($denda) : rupiah(0) ?>"><i class="fas fa-book-dead"></i></a>
                           </td>
                         </tr>
@@ -133,4 +137,30 @@
           </div>
         <?= form_close(); ?>
         <!-- End modal kembalikan buku -->
+        <!-- Start modal baca buku -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-baca-buku">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Baca Buku</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <object id="source-file" type="application/pdf" data="" height="500px" width="100%">
+                <p>
+                  File tidak dapat ditemukan atau plugin tidak aktif!
+                  <br>
+                  <a id="alt-file" href="">Klik disini untuk mendownload file.</a>
+                </p>
+              </object>
+              </div>
+              <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End modal baca buku -->
       </div>

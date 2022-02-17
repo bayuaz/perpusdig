@@ -11,17 +11,17 @@
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/izitoast/dist/css/iziToast.min.css') ?>">
-  <?php if ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/level') : ?>
+  <?php if ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.css') ?>">
   <?php endif; ?>
-  <?php if ($this->uri->uri_string() == 'admin' || $this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/pengguna') : ?>
+  <?php if ($this->uri->uri_string() == 'admin' || $this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/select2/dist/css/select2.min.css') ?>">
   <?php endif; ?>
-  <?php if ($this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/peminjaman' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/level') : ?>
+  <?php if ($this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses' || $this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/peminjaman' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css') ?>">
   <?php endif; ?>
-  <?php if ($this->uri->uri_string() == 'admin/buku') : ?>
+  <?php if ($this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/chocolat/dist/css/chocolat.css') ?>">
   <?php endif; ?>
 

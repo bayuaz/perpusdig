@@ -58,36 +58,76 @@ class Admin extends CI_Controller {
 		}
 
 		if ($this->form_validation->run() !== false) {
-			// upload config
-            $config['upload_path'] = 'assets/uploads/cover/';
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = '2000';
+			// upload config cover
+            $config_cover['upload_path'] = 'assets/uploads/cover/';
+            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config_cover['max_size'] = '2000';
             // inisiasi config
-            $this->upload->initialize($config);
+            $this->upload->initialize($config_cover);
             // proses upload gambar
             if ($this->upload->do_upload('cover')) {
-            	$data = $this->upload->data();
-				$params = [
-					'id_kategori' => $this->input->post('kategori'),
-					'judul_buku' => $this->input->post('judul'),
-					'kode_buku' => $this->input->post('kode'),
-					'pengarang_buku' => $this->input->post('pengarang'),
-					'penerbit_buku' => $this->input->post('penerbit'),
-					'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
-					'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
-					'cover_buku' => $data['file_name'],
-					'create_by' => $this->session->userdata('id'),
-					'create_name' => $this->session->userdata('nama'),
-					'create_date' => date('Y-m-d H:i:s'),
-				];
+            	$data_cover = $this->upload->data();
 
-				if ($this->M_admin->insert_tbl_buku($params)) {
-					$this->session->set_userdata('success', 'Tambah data buku berhasil!');
-					($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
-				} else {
-					$this->session->set_userdata('failed', 'Tambah data buku gagal!');
-					($this->input->post('no-redirect')) ? $this->buku() : $this->index();
-				}
+            	if (!empty($_FILES['buku']['name'])) {
+            		// upload config file
+		            $config_file['upload_path'] = 'assets/uploads/files/';
+		            $config_file['allowed_types'] = 'pdf';
+		            $config_file['max_size'] = '5000';
+		            // inisiasi config
+		            $this->upload->initialize($config_file);
+
+	            	if ($this->upload->do_upload('buku')) {
+	            		$data_file = $this->upload->data();
+
+						$params = [
+							'id_kategori' => $this->input->post('kategori'),
+							'judul_buku' => $this->input->post('judul'),
+							'kode_buku' => $this->input->post('kode'),
+							'pengarang_buku' => $this->input->post('pengarang'),
+							'penerbit_buku' => $this->input->post('penerbit'),
+							'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
+							'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
+							'cover_buku' => $data_cover['file_name'],
+							'file_buku' => $data_file['file_name'],
+							'create_by' => $this->session->userdata('id'),
+							'create_name' => $this->session->userdata('nama'),
+							'create_date' => date('Y-m-d H:i:s'),
+						];
+
+						if ($this->M_admin->insert_tbl_buku($params)) {
+							$this->session->set_userdata('success', 'Tambah data buku berhasil!');
+							($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
+						} else {
+							$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+							($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+						}
+	            	} else {
+	            		$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+	            	}
+            	} else {
+            		$params = [
+						'id_kategori' => $this->input->post('kategori'),
+						'judul_buku' => $this->input->post('judul'),
+						'kode_buku' => $this->input->post('kode'),
+						'pengarang_buku' => $this->input->post('pengarang'),
+						'penerbit_buku' => $this->input->post('penerbit'),
+						'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
+						'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
+						'cover_buku' => $data_cover['file_name'],
+						'create_by' => $this->session->userdata('id'),
+						'create_name' => $this->session->userdata('nama'),
+						'create_date' => date('Y-m-d H:i:s'),
+					];
+
+					if ($this->M_admin->insert_tbl_buku($params)) {
+						$this->session->set_userdata('success', 'Tambah data buku berhasil!');
+						($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
+					} else {
+						$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+					}
+            	}
             } else {
             	$this->session->set_userdata('failed', 'Tambah data buku gagal!');
 				($this->input->post('no-redirect')) ? $this->buku() : $this->index();
@@ -119,20 +159,77 @@ class Admin extends CI_Controller {
 		}
 
 		if ($this->form_validation->run() !== false) {
-			if (!empty($_FILES['cover']['name'])) {
-				// upload config
-	            $config['upload_path'] = 'assets/uploads/cover/';
-	            $config['allowed_types'] = 'jpg|jpeg|png';
-	            $config['max_size'] = '2000';
-	            // inisiasi config
-	            $this->upload->initialize($config);
+			if (!empty($_FILES['cover']['name']) && !empty($_FILES['buku']['name'])) {
+				// upload config cover
+	            $config_cover['upload_path'] = 'assets/uploads/cover/';
+	            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
+	            $config_cover['max_size'] = '2000';
+	            // inisiasi config cover
+	            $this->upload->initialize($config_cover);
 	            // proses upload gambar
 	            if ($this->upload->do_upload('cover')) {
 	            	// hapus cover sebelumnya
 	            	unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
+	            	$data_cover = $this->upload->data();
 
-	            	$data = $this->upload->data();
-					$params = [
+            		// upload config file
+		            $config_file['upload_path'] = 'assets/uploads/files/';
+		            $config_file['allowed_types'] = 'pdf';
+		            $config_file['max_size'] = '5000';
+		            // inisiasi config file
+		            $this->upload->initialize($config_file);
+
+		            if ($this->upload->do_upload('buku')) {
+		                // hapus file sebelumnya
+		            	unlink('assets/uploads/files/'.$detail_buku['file_buku']);
+		            	$data_file = $this->upload->data();
+
+						$params = [
+							'id_kategori' => $this->input->post('kategori'),
+							'judul_buku' => $this->input->post('judul'),
+							'kode_buku' => $this->input->post('kode'),
+							'pengarang_buku' => $this->input->post('pengarang'),
+							'penerbit_buku' => $this->input->post('penerbit'),
+							'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
+							'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
+							'cover_buku' => $data_cover['file_name'],
+							'file_buku' => $data_file['file_name'],
+							'mdb' => $this->session->userdata('id'),
+							'mdb_name' => $this->session->userdata('nama'),
+							'mdd' => date('Y-m-d H:i:s'),
+						];
+
+						$where = ['id_buku' => $this->input->post('id')];
+
+						if ($this->M_admin->update_tbl_buku($params, $where)) {
+							$this->session->set_userdata('success', 'Ubah data buku berhasil!');
+							($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
+						} else {
+							$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+							($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+						}
+		           	} else {
+		           		$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+		           	}
+	            } else {
+	            	$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+					($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+	            }
+			} else if (!empty($_FILES['cover']['name']) && empty($_FILES['buku']['name'])) {
+				// upload config cover
+	            $config_cover['upload_path'] = 'assets/uploads/cover/';
+	            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
+	            $config_cover['max_size'] = '2000';
+	            // inisiasi config cover
+	            $this->upload->initialize($config_cover);
+	            // proses upload gambar
+	            if ($this->upload->do_upload('cover')) {
+	            	// hapus cover sebelumnya
+	            	unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
+	            	$data_cover = $this->upload->data();
+
+	            	$params = [
 						'id_kategori' => $this->input->post('kategori'),
 						'judul_buku' => $this->input->post('judul'),
 						'kode_buku' => $this->input->post('kode'),
@@ -140,7 +237,7 @@ class Admin extends CI_Controller {
 						'penerbit_buku' => $this->input->post('penerbit'),
 						'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
 						'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
-						'cover_buku' => $data['file_name'],
+						'cover_buku' => $data_cover['file_name'],
 						'mdb' => $this->session->userdata('id'),
 						'mdb_name' => $this->session->userdata('nama'),
 						'mdd' => date('Y-m-d H:i:s'),
@@ -155,10 +252,50 @@ class Admin extends CI_Controller {
 						$this->session->set_userdata('failed', 'Ubah data buku gagal!');
 						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
 					}
-	            } else {
-	            	$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+				} else {
+					$this->session->set_userdata('failed', 'Ubah data buku gagal!');
 					($this->input->post('no-redirect')) ? $this->buku() : $this->index();
-	            }
+				}
+			} else if (empty($_FILES['cover']['name']) && !empty($_FILES['buku']['name'])) {
+				// upload config file
+	            $config_file['upload_path'] = 'assets/uploads/files/';
+	            $config_file['allowed_types'] = 'pdf';
+	            $config_file['max_size'] = '5000';
+	            // inisiasi config file
+	            $this->upload->initialize($config_file);
+	            // proses upload gambar
+	            if ($this->upload->do_upload('buku')) {
+	            	// hapus cover sebelumnya
+	            	unlink('assets/uploads/files/'.$detail_buku['file_buku']);
+	            	$data_file = $this->upload->data();
+
+	            	$params = [
+						'id_kategori' => $this->input->post('kategori'),
+						'judul_buku' => $this->input->post('judul'),
+						'kode_buku' => $this->input->post('kode'),
+						'pengarang_buku' => $this->input->post('pengarang'),
+						'penerbit_buku' => $this->input->post('penerbit'),
+						'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
+						'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
+						'file_buku' => $data_file['file_name'],
+						'mdb' => $this->session->userdata('id'),
+						'mdb_name' => $this->session->userdata('nama'),
+						'mdd' => date('Y-m-d H:i:s'),
+					];
+
+					$where = ['id_buku' => $this->input->post('id')];
+
+					if ($this->M_admin->update_tbl_buku($params, $where)) {
+						$this->session->set_userdata('success', 'Ubah data buku berhasil!');
+						($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
+					} else {
+						$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+					}
+				} else {
+					$this->session->set_userdata('failed', 'Ubah data buku gagal!');
+					($this->input->post('no-redirect')) ? $this->buku() : $this->index();
+				}
 			} else {
 				$params = [
 					'id_kategori' => $this->input->post('kategori'),
@@ -207,6 +344,7 @@ class Admin extends CI_Controller {
 
 			if ($this->M_admin->delete_tbl_buku($where)) {
 				unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
+				unlink('assets/uploads/files/'.$detail_buku['file_buku']);
 				$this->session->set_userdata('success', 'Hapus data buku berhasil!');
 				($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
 			} else {

@@ -19,7 +19,7 @@
 
   <!-- JS Libraries -->
   <script src="<?= base_url('stisla/node_modules/izitoast/dist/js/iziToast.min.js') ?>"></script>
-  <?php if ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam') : ?>
+  <?php if ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam' || $this->uri->uri_string() == 'pengguna/pinjam_buku_proses' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') : ?>
   <script src="<?= base_url('stisla/node_modules/datatables/media/js/jquery.dataTables.min.js') ?>"></script>
   <script src="<?= base_url('stisla/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js') ?>"></script>
   <script src="<?= base_url('stisla/node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js') ?>"></script>
@@ -32,9 +32,9 @@
   <script src="<?= base_url('stisla/assets/js/custom.js') ?>"></script>
 
   <!-- Page Specific JS File -->
-  <?php if ($this->uri->uri_string() == 'pengguna/buku') : ?>
+  <?php if ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam_buku_proses' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') : ?>
   <script src="<?= base_url('stisla/assets/js/page/pengguna-buku.js') ?>"></script>
-  <?php elseif ($this->uri->uri_string() == 'pengguna/pinjam') : ?>
+  <?php elseif ($this->uri->uri_string() == 'pengguna/pinjam' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') : ?>
   <script src="<?= base_url('stisla/assets/js/page/pengguna-pinjam.js') ?>"></script>
   <?php endif; ?>
 

@@ -433,20 +433,27 @@
                       <div class="valid-feedback"></div>
                     </div>
                   </div>
-                  <div class="form-group row mb-0">
+                  <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control" required="">
                       <?php if (form_error('cover')) : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi!
+                        Cover Buku wajib diisi! *JPG, JPEG, PNG
                       </div>
                       <?php else : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi!
+                        Cover Buku wajib diisi! *JPG, JPEG, PNG
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="buku" class="form-control">
+                      <div class="valid-feedback">Kosongkan jika tidak ada! *PDF</div>
                     </div>
                   </div>
                 </div>
@@ -589,11 +596,18 @@
                       <div class="valid-feedback"></div>
                     </div>
                   </div>
-                  <div class="form-group row mb-0">
+                  <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control">
                       <div class="valid-feedback">Kosongkan jika tidak ada perubahan</div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="buku" class="form-control">
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan!</div>
                     </div>
                   </div>
                 </div>

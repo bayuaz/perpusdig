@@ -245,6 +245,7 @@ class M_admin extends CI_Model {
                 INNER JOIN tbl_buku b ON a.id_buku = b.id_buku
                 INNER JOIN tbl_kategori c ON b.id_kategori = c.id_kategori
                 GROUP BY a.id_buku
+                ORDER BY jumlah_dipinjam DESC
                 LIMIT 4";
         // execute
         $query = $this->db->query($sql);

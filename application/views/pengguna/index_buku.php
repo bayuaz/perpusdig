@@ -47,6 +47,7 @@
                           <th>Judul</th>
                           <th>Kategori</th>
                           <th>Cover</th>
+                          <th>Buku</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -62,11 +63,18 @@
                             </div>
                           </td>
                           <td>
-                            <?php if (empty($buku['status_peminjaman']) || $buku['status_peminjaman'] == 'dikembalikan') : ?>
-                            <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku"><i class="fas fa-book-reader"></i></a>
-                            <a class="btn btn-info btn-action mr-1 pinjam-buku" title="Pinjam Buku" data-toggle="modal" data-target="#modal-pinjam-buku" data-id="<?= $buku['id_buku']; ?>" data-judul="<?= $buku['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>"><i class="fas fa-swatchbook"></i></a>
+                            <?php if (!empty($buku['file_buku'])) : ?>
+                            <a class="btn btn-info btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $buku['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$buku['file_buku']) ?>"><i class="fas fa-book-reader"></i></a>
                             <?php else : ?>
-                            <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku"><i class="fas fa-book-reader"></i></a>
+                            <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif ?>
+                          </td>
+                          <td>
+                            <?php if ($this->session->userdata('id') != $buku['id_pengguna']) : ?>
+                            <a class="btn btn-primary btn-action mr-1 pinjam-buku" title="Pinjam Buku" data-toggle="modal" data-target="#modal-pinjam-buku" data-id="<?= $buku['id_buku']; ?>" data-judul="<?= $buku['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>"><i class="fas fa-swatchbook"></i></a>
+                            <?php elseif ($this->session->userdata('id') == $buku['id_pengguna'] && (empty($buku['status_peminjaman']) || $buku['status_peminjaman'] == 'dikembalikan')) : ?>
+                            <a class="btn btn-primary btn-action mr-1 pinjam-buku" title="Pinjam Buku" data-toggle="modal" data-target="#modal-pinjam-buku" data-id="<?= $buku['id_buku']; ?>" data-judul="<?= $buku['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>"><i class="fas fa-swatchbook"></i></a>
+                            <?php else : ?>
                             <?php 
                             $waktu_pengembalian  = date_create($buku['tgl_pengembalian']); // waktu pengembalian
                             $waktu_sekarang = date_create(date('Y-m-d')); // waktu dikembalikan
@@ -183,4 +191,30 @@
           </div>
         <?= form_close(); ?>
         <!-- End modal kembalikan buku -->
+        <!-- Start modal baca buku -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-baca-buku">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Baca Buku</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <object id="source-file" type="application/pdf" data="" height="500px" width="100%">
+                <p>
+                  File tidak dapat ditemukan atau plugin tidak aktif!
+                  <br>
+                  <a id="alt-file" href="">Klik disini untuk mendownload file.</a>
+                </p>
+              </object>
+              </div>
+              <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End modal baca buku -->
       </div>

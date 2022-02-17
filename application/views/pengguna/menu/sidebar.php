@@ -10,8 +10,8 @@
             <li class="menu-header">Dashboard</li>
             <li class="<?= ($this->uri->uri_string() == 'pengguna') ? 'active' : '' ?>"><a class="nav-link" href="<?= ($this->uri->uri_string() == 'pengguna') ? '#' : base_url('pengguna') ?>"><i class="fas fa-home"></i> <span>Home</span></a></li>
             <li class="menu-header">Pages</li>
-            <li class="<?= ($this->uri->uri_string() == 'pengguna/buku') ? 'active' : '' ?>"><a class="nav-link" href="<?= ($this->uri->uri_string() == 'pengguna/buku') ? '#' : base_url('pengguna/buku') ?>"><i class="fas fa-book"></i> <span>Buku</span></a></li>
-            <li class="<?= ($this->uri->uri_string() == 'pengguna/pinjam') ? 'active' : '' ?>"><a class="nav-link" href="<?= ($this->uri->uri_string() == 'pengguna/pinjam') ? '#' : base_url('pengguna/pinjam') ?>"><i class="fas fa-book-reader"></i> <span>Dipinjam</span></a></li>
+            <li class="<?= ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam_buku_proses' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') ? 'active' : '' ?>"><a class="nav-link" href="<?= ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam_buku_proses' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') ? '#' : base_url('pengguna/buku') ?>"><i class="fas fa-book"></i> <span>Buku</span></a></li>
+            <li class="<?= ($this->uri->uri_string() == 'pengguna/pinjam' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') ? 'active' : '' ?>"><a class="nav-link" href="<?= ($this->uri->uri_string() == 'pengguna/pinjam' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') ? '#' : base_url('pengguna/pinjam') ?>"><i class="fas fa-book-reader"></i> <span>Dipinjam</span></a></li>
           </ul>
 
             <div class="mt-4 mb-4 p-3 hide-sidebar-mini">

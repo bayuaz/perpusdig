@@ -11,7 +11,7 @@
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/izitoast/dist/css/iziToast.min.css') ?>">
-  <?php if ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam') : ?>
+  <?php if ($this->uri->uri_string() == 'pengguna/buku' || $this->uri->uri_string() == 'pengguna/pinjam' || $this->uri->uri_string() == 'pengguna/pinjam_buku_proses' || $this->uri->uri_string() == 'pengguna/kembalikan_buku_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/chocolat/dist/css/chocolat.css') ?>">
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css') ?>">

@@ -39,8 +39,9 @@
                   <h2><?= $salam; ?>, <?= $detail_user['nama_pengguna']; ?>!</h2>
                   <p class="lead">Mau ngapain hari ini?</p>
                   <div class="mt-4">
+                    <a href="<?= base_url('pengguna/buku'); ?>" class="btn btn-outline-white btn-lg btn-icon icon-left mr-2"><i class="fas fa-book-reader"></i> Baca Buku</a>
                     <a href="<?= base_url('pengguna/buku'); ?>" class="btn btn-outline-white btn-lg btn-icon icon-left mr-2"><i class="fas fa-book"></i> Pinjam Buku</a>
-                    <a href="<?= base_url('pengguna/buku'); ?>" class="btn btn-outline-white btn-lg btn-icon icon-left"><i class="fas fa-book-dead"></i> Pulangin Buku</a>
+                    <a href="<?= base_url('pengguna/pinjam'); ?>" class="btn btn-outline-white btn-lg btn-icon icon-left"><i class="fas fa-book-dead"></i> Pulangin Buku</a>
                   </div>
                 </div>
               </div>

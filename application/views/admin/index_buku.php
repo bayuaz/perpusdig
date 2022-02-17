@@ -64,6 +64,7 @@
                           <th>Pengarang</th>
                           <th>Jumlah</th>
                           <th>Cover</th>
+                          <th>File</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -81,8 +82,15 @@
                             </div>
                           </td>
                           <td>
-                            <a class="btn btn-primary btn-action mr-1 ubah-buku" title="Edit" data-toggle="modal" data-target="#modal-ubah-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn btn-danger btn-action hapus-buku" title="Delete" data-toggle="modal" data-target="#modal-hapus-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-trash"></i></a>
+                            <?php if (!empty($buku['file_buku'])) : ?>
+                            <a class="btn btn-info btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $buku['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$buku['file_buku']) ?>"><i class="fas fa-file"></i></a>
+                            <?php else : ?>
+                            <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif ?>
+                          </td>
+                          <td>
+                            <a class="btn btn-primary btn-action mr-1 ubah-buku" title="Edit Buku" data-toggle="modal" data-target="#modal-ubah-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-danger btn-action hapus-buku" title="Hapus Buku" data-toggle="modal" data-target="#modal-hapus-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>
@@ -225,20 +233,27 @@
                       <div class="valid-feedback"></div>
                     </div>
                   </div>
-                  <div class="form-group row mb-0">
+                  <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control" required="">
                       <?php if (form_error('cover')) : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi!
+                        Cover Buku wajib diisi! *JPG, JPEG, PNG
                       </div>
                       <?php else : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi!
+                        Cover Buku wajib diisi! *JPG, JPEG, PNG
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="buku" class="form-control">
+                      <div class="valid-feedback">Kosongkan jika tidak ada! *PDF</div>
                     </div>
                   </div>
                 </div>
@@ -382,11 +397,18 @@
                       <div class="valid-feedback"></div>
                     </div>
                   </div>
-                  <div class="form-group row mb-0">
+                  <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control">
                       <div class="valid-feedback">Kosongkan jika tidak ada perubahan</div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="buku" class="form-control">
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan!</div>
                     </div>
                   </div>
                 </div>
@@ -462,11 +484,37 @@
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-danger">Hapus</button>
+                  <button type="submit" class="btn btn-danger -konfirmasi-hapus-buku">Hapus</button>
                 </div>
               </div>
             </div>
           </div>
         <?= form_close(); ?>
         <!-- End modal hapus buku -->
+        <!-- Start modal baca buku -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-baca-buku">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Baca Buku</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <object id="source-file" type="application/pdf" data="" height="500px" width="100%">
+                <p>
+                  File tidak dapat ditemukan atau plugin tidak aktif!
+                  <br>
+                  <a id="alt-file" href="">Klik disini untuk mendownload file.</a>
+                </p>
+              </object>
+              </div>
+              <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End modal baca buku -->
       </div>

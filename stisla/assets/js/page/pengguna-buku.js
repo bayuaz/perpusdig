@@ -27,6 +27,17 @@ $(document).ready(function() {
 		$('#kembalikan-buku-denda').text($(this).data('denda')).change();
 	});
 
+	$('.baca-buku').click(function() {
+        var path = $(this).data('file');
+        $('#source-file').attr('data', path);
+        $('#alt-file').attr('href', path);
+        $('.modal-title').text($(this).data('judul'));
+    });
+
+  	$(".file-kosong").click(function() {
+		swal('File Tidak Ada', 'File belum diunggah oleh Admin Perpustakaan!', 'error');
+	});
+
 	$('#konfirmasi-pinjam').click(function(e) {
 	  e.preventDefault();
 	  let form = $(this).parents('form');
@@ -44,8 +55,8 @@ $(document).ready(function() {
 	      swal('Buku tidak jadi dipinjam!', {
 	      	icon: 'error',
 	      });
-	      }
-	    });
+	     }
+	   });
 	});
 
 	$('#konfirmasi-kembali').click(function(e) {
@@ -65,8 +76,8 @@ $(document).ready(function() {
 	      swal('Buku tidak jadi dikembalikan!', {
 	      	icon: 'error',
 	      });
-	      }
-	    });
+	     }
+	   });
 	});
 });
 
