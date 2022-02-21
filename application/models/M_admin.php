@@ -241,7 +241,7 @@ class M_admin extends CI_Model {
 
     function get_data_sering_dipinjam() {
         // query
-        $sql = "SELECT COUNT(a.id_peminjaman) as jumlah_dipinjam, b.judul_buku, c.nama_kategori FROM tbl_peminjaman a
+        $sql = "SELECT COUNT(a.id_peminjaman) as jumlah_dipinjam, b.judul_buku, b.cover_buku, c.nama_kategori FROM tbl_peminjaman a
                 INNER JOIN tbl_buku b ON a.id_buku = b.id_buku
                 INNER JOIN tbl_kategori c ON b.id_kategori = c.id_kategori
                 GROUP BY a.id_buku

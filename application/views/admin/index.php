@@ -187,7 +187,7 @@
                   <ul class="list-unstyled list-unstyled-border">
                   <?php foreach ($data_sering_dipinjam as $sering_dipinjam) : ?>
                     <li class="media">
-                      <img class="mr-3 rounded" width="55" src="<?= base_url('stisla/assets/img/products/product-4-50.png') ?>" alt="product">
+                      <img class="mr-3 rounded" width="55" src="<?= base_url('assets/uploads/cover/'.$sering_dipinjam['cover_buku']) ?>" alt="product">
                       <div class="media-body">
                         <div class="float-right"><div class="font-weight-600 text-danger text-small"><?= $sering_dipinjam['jumlah_dipinjam'] ?>x Dipinjam</div></div>
                         <div class="media-title"><?= $sering_dipinjam['judul_buku'] ?></div>
@@ -439,11 +439,11 @@
                       <input type="file" name="cover" class="form-control" required="">
                       <?php if (form_error('cover')) : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi! *JPG, JPEG, PNG
+                        Cover Buku wajib diisi! <span class="text-warning">*JPG, JPEG, PNG, GIF</span>
                       </div>
                       <?php else : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi! *JPG, JPEG, PNG
+                        Cover Buku wajib diisi! <span class="text-warning">*JPG, JPEG, PNG, GIF</span>
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
@@ -453,7 +453,7 @@
                     <label class="col-sm-3 col-form-label">File</label>
                     <div class="col-sm-9">
                       <input type="file" name="buku" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada! *PDF</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada! <span class="text-warning">*PDF</span></div>
                     </div>
                   </div>
                 </div>
@@ -600,14 +600,14 @@
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan! <span class="text-warning">*JPG, JPEG, PNG, GIF</span></div>
                     </div>
                   </div>
                   <div class="form-group row mb-0">
                     <label class="col-sm-3 col-form-label">File</label>
                     <div class="col-sm-9">
                       <input type="file" name="buku" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan!</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan! <span class="text-warning">*PDF</span></div>
                     </div>
                   </div>
                 </div>

@@ -6,12 +6,13 @@ class M_pengguna extends CI_Model {
         return $this->session->userdata('level');
     }
 
-     public function get_data_buku() {
+     public function get_data_buku($params) {
     	// query
-        $sql = "SELECT a.*, d.nama_kategori, a.judul_buku, c.id_pengguna, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
+        $sql = "SELECT a.*, d.nama_kategori, c.id_pengguna, c.tgl_peminjaman, c.tgl_pengembalian, c.status_peminjaman FROM tbl_buku a
                 LEFT JOIN (
                     SELECT id_buku, MAX(id_peminjaman) as id_peminjaman
                     FROM tbl_peminjaman
+                    WHERE id_pengguna = ?
                     GROUP BY id_buku
                 ) b ON a.id_buku = b.id_buku
                 LEFT JOIN tbl_peminjaman c ON b.id_buku = c.id_buku
@@ -19,7 +20,7 @@ class M_pengguna extends CI_Model {
                 INNER JOIN tbl_kategori d ON a.id_kategori = d.id_kategori
                 ORDER BY a.id_buku DESC";
         // execute
-        $query = $this->db->query($sql);
+        $query = $this->db->query($sql, $params);
         // cek result
         if ($query->num_rows() > 0) {
             $result = $query->result_array();

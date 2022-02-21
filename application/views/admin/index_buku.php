@@ -239,11 +239,11 @@
                       <input type="file" name="cover" class="form-control" required="">
                       <?php if (form_error('cover')) : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi! *JPG, JPEG, PNG
+                        Cover Buku wajib diisi! <span class="text-warning">*JPG, JPEG, PNG, GIF</span>
                       </div>
                       <?php else : ?>
                       <div class="invalid-feedback">
-                        Cover Buku wajib diisi! *JPG, JPEG, PNG
+                        Cover Buku wajib diisi! <span class="text-warning">*JPG, JPEG, PNG, GIF</span>
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
@@ -253,7 +253,7 @@
                     <label class="col-sm-3 col-form-label">File</label>
                     <div class="col-sm-9">
                       <input type="file" name="buku" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada! *PDF</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada! <span class="text-warning">*PDF</span></div>
                     </div>
                   </div>
                 </div>
@@ -401,14 +401,14 @@
                     <label class="col-sm-3 col-form-label">Cover</label>
                     <div class="col-sm-9">
                       <input type="file" name="cover" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan! <span class="text-warning">*JPG, JPEG, PNG, GIF</span></div>
                     </div>
                   </div>
                   <div class="form-group row mb-0">
                     <label class="col-sm-3 col-form-label">File</label>
                     <div class="col-sm-9">
                       <input type="file" name="buku" class="form-control">
-                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan!</div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada perubahan! <span class="text-warning">*PDF</span></div>
                     </div>
                   </div>
                 </div>

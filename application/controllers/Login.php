@@ -21,7 +21,19 @@ class Login extends CI_Controller {
 
 	public function index() {
 		if (empty($this->input->post())) {
-			$this->load->view('login/index');
+			// set ucapan salam
+			$jam = date('H:i');
+			if ($jam > '05:30' && $jam < '11:00') {
+			    $data['salam'] = 'Pagi';
+			} elseif ($jam >= '11:00' && $jam < '15:00') {
+			    $data['salam'] = 'Siang';
+			} elseif ($jam >= '15:00' && $jam < '18:00') {
+			    $data['salam'] = 'Sore';
+			} else {
+			    $data['salam'] = 'Malam';
+			}
+
+			$this->load->view('login/index', $data);
 		} else {
 			$this->form_validation->set_rules('nis_nip','NIS / NIP', 'trim|required');
 			$this->form_validation->set_rules('password','Password', 'trim|required');
@@ -63,14 +75,50 @@ class Login extends CI_Controller {
 		                	redirect('login');
 		                }
 					} else {
+						// set ucapan salam
+						$jam = date('H:i');
+						if ($jam > '05:30' && $jam < '11:00') {
+						    $data['salam'] = 'Pagi';
+						} elseif ($jam >= '11:00' && $jam < '15:00') {
+						    $data['salam'] = 'Siang';
+						} elseif ($jam >= '15:00' && $jam < '18:00') {
+						    $data['salam'] = 'Sore';
+						} else {
+						    $data['salam'] = 'Malam';
+						}
+
 						$data['error'] = 'Username dan Password yang anda masukkan salah!';
 						$this->load->view('login/index', $data);
 					}
 				} else {
+					// set ucapan salam
+					$jam = date('H:i');
+					if ($jam > '05:30' && $jam < '11:00') {
+					    $data['salam'] = 'Pagi';
+					} elseif ($jam >= '11:00' && $jam < '15:00') {
+					    $data['salam'] = 'Siang';
+					} elseif ($jam >= '15:00' && $jam < '18:00') {
+					    $data['salam'] = 'Sore';
+					} else {
+					    $data['salam'] = 'Malam';
+					}
+
 					$data['error'] = 'Username dan Password yang anda masukkan salah!';
 					$this->load->view('login/index', $data);
 				}
 			} else {
+				// set ucapan salam
+				$jam = date('H:i');
+				if ($jam > '05:30' && $jam < '11:00') {
+				    $data['salam'] = 'Pagi';
+				} elseif ($jam >= '11:00' && $jam < '15:00') {
+				    $data['salam'] = 'Siang';
+				} elseif ($jam >= '15:00' && $jam < '18:00') {
+				    $data['salam'] = 'Sore';
+				} else {
+				    $data['salam'] = 'Malam';
+				}
+				
 				$data['error'] = 'Periksa kembali inputan form!';
 				$this->load->view('login/index', $data);
 			}
