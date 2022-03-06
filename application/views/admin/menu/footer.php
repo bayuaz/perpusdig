@@ -31,7 +31,7 @@
   <?php if ($this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses') : ?>
   <script src="<?= base_url('stisla/node_modules/chocolat/dist/js/jquery.chocolat.min.js') ?>"></script>
   <script src="<?= base_url('stisla/node_modules/sweetalert/dist/sweetalert.min.js') ?>"></script>
-  <?php elseif ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' | $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses') : ?>
+  <?php elseif ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' | $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses' || $this->uri->uri_string() == 'admin/profile') : ?>
   <script src="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.js') ?>"></script>
   <?php endif; ?>
 
@@ -52,6 +52,8 @@
   <script src="<?= base_url('stisla/assets/js/page/admin-pengguna.js') ?>"></script>
   <?php elseif ($this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses') : ?>
   <script src="<?= base_url('stisla/assets/js/page/admin-level.js') ?>"></script>
+  <?php elseif ($this->uri->uri_string() == 'admin/profile' || $this->uri->uri_string() == 'admin/ubah_profile_proses') : ?>
+  <script src="<?= base_url('stisla/assets/js/page/admin-profile.js') ?>"></script>
   <?php endif; ?>
 
   <?php

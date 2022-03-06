@@ -9,9 +9,18 @@ $(document).ready(function () {
     dropdownParent: $("#modal-ubah-buku")
   });
 
+  $('.bentuk-buku').select2({
+      dropdownParent: $("#tambah-buku")
+  });
+
+    $('.bentuk-buku-ubah').select2({
+      dropdownParent: $("#modal-ubah-buku")
+    });
+
   $('.ubah-buku').click(function() {
     $('#ubah-id').val($(this).data('id')).change();
     $('#ubah-kategori').val($(this).data('kategori')).change();
+    $('#ubah-bentuk').val($(this).data('bentuk')).change();
     $('#ubah-judul').val($(this).data('judul')).change();
     $('#ubah-kode').val($(this).data('kode')).change();
     $('#ubah-pengarang').val($(this).data('pengarang')).change();
@@ -23,6 +32,7 @@ $(document).ready(function () {
   $('.hapus-buku').click(function() {
     $('#hapus-id').val($(this).data('id')).change();
     $('#hapus-kategori').val($(this).data('kategori')).change();
+    $('#hapus-bentuk').val($(this).data('bentuk')).change();
     $('#hapus-judul').val($(this).data('judul')).change();
     $('#hapus-kode').val($(this).data('kode')).change();
     $('#hapus-pengarang').val($(this).data('pengarang')).change();

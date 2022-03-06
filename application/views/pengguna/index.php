@@ -11,6 +11,8 @@
               echo 'Buku';
             } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
               echo 'Buku Dipinjam';
+            } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -26,6 +28,8 @@
                 echo 'Buku';
               } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
                 echo 'Buku Dipinjam';
+              } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+                echo 'Profile';
               }
 
               ?>

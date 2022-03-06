@@ -26,6 +26,9 @@
   <script src="<?= base_url('stisla/node_modules/chocolat/dist/js/jquery.chocolat.min.js') ?>"></script>
   <script src="<?= base_url('stisla/node_modules/sweetalert/dist/sweetalert.min.js') ?>"></script>
   <?php endif; ?>
+  <?php if ($this->uri->uri_string() == 'pengguna/profile' || $this->uri->uri_string() == 'pengguna/ubah_profile_proses') : ?>
+  <script src="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.js') ?>"></script>
+  <?php endif; ?>
   
   <!-- Template JS File -->
   <script src="<?= base_url('stisla/assets/js/scripts.js') ?>"></script>

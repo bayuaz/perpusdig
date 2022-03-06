@@ -17,6 +17,8 @@
               echo 'Pengguna';
             } elseif ($this->uri->uri_string() == 'admin/level') {
               echo 'Level';
+            } elseif ($this->uri->uri_string() == 'admin/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -38,6 +40,8 @@
                 echo 'Pengguna';
               } elseif ($this->uri->uri_string() == 'admin/level') {
                 echo 'Level';
+              } elseif ($this->uri->uri_string() == 'admin/profile') {
+                echo 'Profile';
               }
 
               ?>

@@ -11,6 +11,8 @@
               echo 'Buku';
             } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
               echo 'Buku Dipinjam';
+            } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -26,6 +28,8 @@
                 echo 'Buku';
               } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
                 echo 'Buku Dipinjam';
+              } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+                echo 'Profile';
               }
 
               ?>
@@ -48,6 +52,7 @@
                           <th>Kategori</th>
                           <th>Tanggal Pinjam</th>
                           <th>Tanggal Kembali</th>
+                          <th>Status</th>
                           <th>Cover</th>
                           <th>Action</th>
                         </tr>
@@ -66,16 +71,54 @@
                           ?>
                           <td class="<?= $diff->invert > 0 ? 'text-danger' : 'text-success'; ?>"><?= tglIndo($pinjam['tgl_pengembalian']); ?></td>
                           <td>
+                            <?php
+
+                            $waktu_pengembalian  = date_create($pinjam['tgl_pengembalian']); // waktu pengembalian
+                            $waktu_sekarang = date_create(); // waktu sekarang
+                            $diff  = date_diff($waktu_sekarang, $waktu_pengembalian);
+
+                            if ($diff->invert > 0) :
+                              if ($pinjam['tgl_pengembalian'] == date('Y-m-d')) : ?>
+                              <div class="badge badge-info">Dipinjam</div>
+                              <?php else :
+                                if ($pinjam['status_peminjaman'] == 'dipinjam') : ?>
+                                  <div class="badge badge-danger">Telat <?= $diff->d ?> hari</div>
+                                <?php elseif ($pinjam['status_peminjaman'] == 'diajukan') : ?>
+                                  <div class="badge badge-warning">Menunggu Persetujuan</div>
+                                <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
+                                  <div class="badge badge-danger">Ditolak</div>
+                                <?php elseif ($pinjam['status_peminjaman'] == 'dikembalikan') : ?>
+                                  <div class="badge badge-success">Dikembalikan</div>
+                                <?php endif;
+                              endif;
+                            else :
+                              if ($pinjam['status_peminjaman'] == 'diajukan') : ?>
+                                <div class="badge badge-warning">Menunggu Persetujuan</div>
+                              <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
+                                <div class="badge badge-danger">Ditolak</div>
+                              <?php elseif ($pinjam['status_peminjaman'] == 'dipinjam') : ?>
+                                <div class="badge badge-info">Dipinjam</div>
+                              <?php elseif ($pinjam['status_peminjaman'] == 'dikembalikan') : ?>
+                                <div class="badge badge-success">Dikembalikan</div>
+                              <?php endif;
+                            endif; ?>
+                          </td>
+                          <td>
                             <div class="gallery">
                               <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $pinjam['cover_buku'] ?>" data-title="<?= $pinjam['judul_buku'] ?>"></div>
                             </div>
                           </td>
                           <td>
+                            <?php if ($pinjam['status_peminjaman'] != 'diajukan' && $pinjam['status_peminjaman'] != 'ditolak') : ?>
                             <?php if (!empty($pinjam['file_buku'])) : ?>
                             <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $pinjam['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$pinjam['file_buku']) ?>"><i class="fas fa-book-reader"></i></a>
                             <?php else : ?>
                             <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
                             <?php endif; ?>
+                            <?php endif; 
+
+                            $denda = 2000 * $diff->d;
+                            ?>
                             <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-denda="<?= $diff->invert > 0 ? rupiah($denda) : rupiah(0) ?>"><i class="fas fa-book-dead"></i></a>
                           </td>
                         </tr>

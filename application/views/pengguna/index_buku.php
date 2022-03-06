@@ -11,8 +11,10 @@
               echo 'Buku';
             } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
               echo 'Buku Dipinjam';
+            } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+              echo 'Profile';
             }
-
+            
             ?>
             </h1>
             <div class="section-header-breadcrumb">
@@ -26,6 +28,8 @@
                 echo 'Buku';
               } elseif ($this->uri->uri_string() == 'pengguna/pinjam') {
                 echo 'Buku Dipinjam';
+              } elseif ($this->uri->uri_string() == 'pengguna/profile') {
+                echo 'Profile';
               }
 
               ?>
@@ -46,8 +50,8 @@
                           <th class="text-center">#</th>
                           <th>Judul</th>
                           <th>Kategori</th>
+                          <th>Bentuk</th>
                           <th>Cover</th>
-                          <th>Buku</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -57,17 +61,11 @@
                           <td><?= $key+1; ?></td>
                           <td><?= $buku['judul_buku'] ?></td>
                           <td><?= $buku['nama_kategori'] ?></td>
+                          <td><?= $buku['bentuk_buku'] ?></td>
                           <td>
                             <div class="gallery">
                               <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $buku['cover_buku'] ?>" data-title="<?= $buku['judul_buku'] ?>"></div>
                             </div>
-                          </td>
-                          <td>
-                            <?php if (!empty($buku['file_buku'])) : ?>
-                            <a class="btn btn-info btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $buku['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$buku['file_buku']) ?>"><i class="fas fa-book-reader"></i></a>
-                            <?php else : ?>
-                            <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
-                            <?php endif ?>
                           </td>
                           <td>
                             <?php if ($this->session->userdata('id') != $buku['id_pengguna']) : ?>

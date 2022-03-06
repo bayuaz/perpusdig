@@ -24,6 +24,7 @@ $(document).ready(function() {
 	    $('#ubah-pass').val($(this).data('pass')).change();
 	    $('#ubah-email').val($(this).data('email')).change();
 	    $('#ubah-nohp').val($(this).data('nohp')).change();
+	    $('#ubah-bio').summernote('code', $(this).data('bio'));
 	    $('#ubah-alamat').summernote('code', $(this).data('alamat'));
   	});
 
@@ -35,6 +36,8 @@ $(document).ready(function() {
 	    $('#hapus-pass').val($(this).data('pass')).change();
 	    $('#hapus-email').val($(this).data('email')).change();
 	    $('#hapus-nohp').val($(this).data('nohp')).change();
+	    $('#hapus-bio').summernote('code', $(this).data('bio'));
+	    $('#hapus-bio').summernote('disable');
 	    $('#hapus-alamat').summernote('code', $(this).data('alamat'));
 	    $('#hapus-alamat').summernote('disable');
   	});

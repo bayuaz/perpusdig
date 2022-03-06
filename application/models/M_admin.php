@@ -21,9 +21,9 @@ class M_admin extends CI_Model {
         }
     }
 
-    function get_total_buku() {
+    function get_total_buku_fisik() {
         // query
-        $sql = "SELECT COUNT(id_buku) as total_buku FROM tbl_buku";
+        $sql = "SELECT COUNT(id_buku) as total_buku FROM tbl_buku WHERE bentuk_buku = 'Fisik'";
         // execute
         $query = $this->db->query($sql);
         // cek result
@@ -36,16 +36,16 @@ class M_admin extends CI_Model {
         }
     }
 
-    function get_total_kategori() {
+    function get_total_buku_digital() {
         // query
-        $sql = "SELECT COUNT(id_kategori) as total_kategori FROM tbl_kategori";
+        $sql = "SELECT COUNT(id_buku) as total_buku FROM tbl_buku WHERE bentuk_buku = 'Digital'";
         // execute
         $query = $this->db->query($sql);
         // cek result
         if ($query->num_rows() > 0) {
             $result = $query->row_array();
             $query->free_result();
-            return $result['total_kategori'];
+            return $result['total_buku'];
         } else {
             return array();
         }
@@ -283,6 +283,23 @@ class M_admin extends CI_Model {
                     ORDER BY id_pengguna DESC LIMIT 1
                 ) b ON a.id_pengguna = b.id_pengguna
                 WHERE b.id_pengguna = ?";
+        // execute
+        $query = $this->db->query($sql, $params);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            $query->free_result();
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
+    function get_detail_user_profile($params) {
+        // query
+        $sql = "SELECT a.*, b.nama_level FROM tbl_pengguna a
+                INNER JOIN tbl_level b ON a.id_level = b.id_level
+                WHERE id_pengguna = ?";
         // execute
         $query = $this->db->query($sql, $params);
         // cek result

@@ -36,7 +36,7 @@ class M_pengguna extends CI_Model {
         $sql = "SELECT a.*, b.judul_buku, b.cover_buku, b.file_buku, c.nama_kategori FROM tbl_peminjaman a
                 INNER JOIN tbl_buku b ON a.id_buku = b.id_buku
                 INNER JOIN tbl_kategori c ON c.id_kategori = b.id_kategori
-                WHERE id_pengguna = ? AND status_peminjaman = 'dipinjam'
+                WHERE id_pengguna = ? AND (status_peminjaman = 'diajukan' OR status_peminjaman = 'ditolak' OR status_peminjaman = 'dipinjam')
                 ORDER BY id_peminjaman DESC";
         // execute
         $query = $this->db->query($sql, $params);
@@ -101,6 +101,39 @@ class M_pengguna extends CI_Model {
         }
     }
 
+    function get_detail_user_profile($params) {
+        // query
+        $sql = "SELECT a.*, b.nama_level FROM tbl_pengguna a
+                INNER JOIN tbl_level b ON a.id_level = b.id_level
+                WHERE id_pengguna = ?";
+        // execute
+        $query = $this->db->query($sql, $params);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            $query->free_result();
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
+    function get_detail_peminjaman($params) {
+        // query
+        $sql = "SELECT * FROM tbl_peminjaman
+                WHERE id_peminjaman = ?";
+        // execute
+        $query = $this->db->query($sql, $params);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            $query->free_result();
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
     function get_id_peminjaman($params) {
         // query
         $sql = "SELECT id_peminjaman FROM tbl_peminjaman
@@ -120,7 +153,7 @@ class M_pengguna extends CI_Model {
 
     function cek_pinjam_buku($params) {
         // query
-        $sql = "SELECT * FROM tbl_peminjaman WHERE id_pengguna = ? AND id_buku = ? AND status_peminjaman = 'dipinjam'";
+        $sql = "SELECT * FROM tbl_peminjaman WHERE id_pengguna = ? AND id_buku = ? AND (status_peminjaman = 'dipinjam' OR status_peminjaman = 'diajukan'";
         // execute
         $query = $this->db->query($sql, $params);
         // cek result
@@ -143,5 +176,9 @@ class M_pengguna extends CI_Model {
 
     function update_tbl_peminjaman($params, $where) {
         return $this->db->update('tbl_peminjaman', $params, $where);
+    }
+
+    function update_tbl_pengguna($params, $where) {
+        return $this->db->update('tbl_pengguna', $params, $where);
     }
 }

@@ -17,6 +17,8 @@
               echo 'Pengguna';
             } elseif ($this->uri->uri_string() == 'admin/level') {
               echo 'Level';
+            } elseif ($this->uri->uri_string() == 'admin/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -38,6 +40,8 @@
                 echo 'Pengguna';
               } elseif ($this->uri->uri_string() == 'admin/level') {
                 echo 'Level';
+              } elseif ($this->uri->uri_string() == 'admin/profile') {
+                echo 'Profile';
               }
 
               ?>
@@ -61,7 +65,7 @@
                           <th class="text-center">#</th>
                           <th>Judul</th>
                           <th>Kategori</th>
-                          <th>Pengarang</th>
+                          <th>Bentuk</th>
                           <th>Jumlah</th>
                           <th>Cover</th>
                           <th>File</th>
@@ -74,12 +78,16 @@
                           <td><?= $key+1; ?></td>
                           <td><?= $buku['judul_buku'] ?></td>
                           <td><?= $buku['nama_kategori'] ?></td>
-                          <td><?= $buku['pengarang_buku'] ?></td>
+                          <td><?= $buku['bentuk_buku'] ?></td>
                           <td><?= $buku['jumlah_buku'] ?></td>
                           <td>
+                            <?php if (!empty($buku['cover_buku'])) : ?>
                             <div class="gallery">
                               <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $buku['cover_buku'] ?>" data-title="<?= $buku['judul_buku'] ?>"></div>
                             </div>
+                            <?php else : ?>
+                            <a class="btn btn-warning btn-action mr-1 cover-kosong" title="Cover belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif; ?>
                           </td>
                           <td>
                             <?php if (!empty($buku['file_buku'])) : ?>
@@ -89,8 +97,8 @@
                             <?php endif ?>
                           </td>
                           <td>
-                            <a class="btn btn-primary btn-action mr-1 ubah-buku" title="Edit Buku" data-toggle="modal" data-target="#modal-ubah-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn btn-danger btn-action hapus-buku" title="Hapus Buku" data-toggle="modal" data-target="#modal-hapus-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-primary btn-action mr-1 ubah-buku" title="Edit Buku" data-toggle="modal" data-target="#modal-ubah-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-bentuk="<?= $buku['bentuk_buku'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-danger btn-action hapus-buku" title="Hapus Buku" data-toggle="modal" data-target="#modal-hapus-buku" data-id="<?= $buku['id_buku']; ?>" data-kategori="<?= $buku['id_kategori'] ?>" data-bentuk="<?= $buku['bentuk_buku'] ?>" data-judul="<?= $buku['judul_buku']; ?>" data-kode="<?= $buku['kode_buku']; ?>" data-pengarang="<?= $buku['pengarang_buku']; ?>" data-penerbit="<?= $buku['penerbit_buku']; ?>" data-tahun-terbit="<?= $buku['tahun_terbit_buku']; ?>" data-jumlah="<?= $buku['jumlah_buku']; ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>
@@ -132,6 +140,26 @@
                       <?php else : ?>
                       <div class="invalid-feedback">
                         Kategori Buku wajib diisi!
+                      </div>
+                      <?php endif; ?>
+                      <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Bentuk</label>
+                    <div class="col-sm-9">
+                      <select name="bentuk" class="form-control select2 bentuk-buku" data-placeholder="Pilih" required="">
+                        <option disabled selected value></option>
+                        <option value="Fisik">Fisik</option>
+                        <option value="Digital">Digital</option>
+                      </select>
+                      <?php if (form_error('bentuk')) : ?>
+                      <div class="invalid-feedback">
+                        Bentuk Buku wajib diisi!
+                      </div>
+                      <?php else : ?>
+                      <div class="invalid-feedback">
+                        Bentuk Buku wajib diisi!
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
@@ -302,6 +330,25 @@
                     </div>
                   </div>
                   <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Bentuk</label>
+                    <div class="col-sm-9">
+                      <select name="bentuk" class="form-control select2 bentuk-buku-ubah" data-placeholder="Pilih" id="ubah-bentuk" required="">
+                        <option value="Fisik">Fisik</option>
+                        <option value="Digital">Digital</option>
+                      </select>
+                      <?php if (form_error('bentuk')) : ?>
+                      <div class="invalid-feedback">
+                        Bentuk Buku wajib diisi!
+                      </div>
+                      <?php else : ?>
+                      <div class="invalid-feedback">
+                        Bentuk Buku wajib diisi!
+                      </div>
+                      <?php endif; ?>
+                      <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Judul</label>
                     <div class="col-sm-9">
                       <input type="text" name="judul" class="form-control" id="ubah-judul" required="" autocomplete="off" value="<?= set_value('judul') ?>">
@@ -442,6 +489,15 @@
                         <?php foreach($data_kategori as $kategori) : ?> 
                         <option value="<?= $kategori['id_kategori'] ?>"><?= $kategori['nama_kategori'] ?></option>
                         <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Bentuk</label>
+                    <div class="col-sm-9">
+                      <select name="bentuk" class="form-control select2 bentuk-buku-ubah" id="hapus-bentuk" data-placeholder="Pilih" disabled="">
+                        <option value="Fisik">Fisik</option>
+                        <option value="Digital">Digital</option>
                       </select>
                     </div>
                   </div>

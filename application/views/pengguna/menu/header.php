@@ -16,6 +16,10 @@
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css') ?>">
   <?php endif; ?>
+  <?php if ($this->uri->uri_string() == 'pengguna/profile' || $this->uri->uri_string() == 'pengguna/ubah_profile_proses') : ?>
+  <link rel="stylesheet" href="<?= base_url('stisla/node_modules/bootstrap-social/bootstrap-social.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.css') ?>">
+  <?php endif; ?>
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="<?= base_url('stisla/assets/css/style.css') ?>">
@@ -65,7 +69,7 @@
 
               ?>
               <div class="dropdown-title">Logged in <?= $diff->i ?> min ago</div>
-              <a href="#" class="dropdown-item has-icon">
+              <a href="<?= base_url('pengguna/profile') ?>" class="dropdown-item has-icon">
                 <i class="fas fa-user"></i> Profile
               </a>
               <a href="#" class="dropdown-item has-icon">

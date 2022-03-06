@@ -17,6 +17,8 @@
               echo 'Pengguna';
             } elseif ($this->uri->uri_string() == 'admin/level') {
               echo 'Level';
+            } elseif ($this->uri->uri_string() == 'admin/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -38,6 +40,8 @@
                 echo 'Pengguna';
               } elseif ($this->uri->uri_string() == 'admin/level') {
                 echo 'Level';
+              } elseif ($this->uri->uri_string() == 'admin/profile') {
+                echo 'Profile';
               }
 
               ?>
@@ -73,7 +77,7 @@
                           <td><?= tglIndo($peminjaman['tgl_peminjaman']) ?></td>
                           <td><?= tglIndo($peminjaman['tgl_pengembalian']) ?></td>
                           <td>
-                            <?php 
+                            <?php
 
                             $waktu_pengembalian  = date_create($peminjaman['tgl_pengembalian']); // waktu pengembalian
                             $waktu_sekarang = date_create(); // waktu sekarang
@@ -85,14 +89,22 @@
                               <?php else :
                                 if ($peminjaman['status_peminjaman'] == 'dipinjam') : ?>
                                   <div class="badge badge-danger">Telat <?= $diff->d ?> hari</div>
-                                <?php else : ?>
+                                <?php elseif ($peminjaman['status_peminjaman'] == 'diajukan') : ?>
+                                  <div class="badge badge-warning">Menunggu Persetujuan</div>
+                                <?php elseif ($peminjaman['status_peminjaman'] == 'ditolak') : ?>
+                                  <div class="badge badge-danger">Ditolak</div>
+                                <?php elseif ($peminjaman['status_peminjaman'] == 'dikembalikan') : ?>
                                   <div class="badge badge-success">Dikembalikan</div>
                                 <?php endif;
                               endif;
                             else :
-                              if ($peminjaman['status_peminjaman'] == 'dipinjam') : ?>
+                              if ($peminjaman['status_peminjaman'] == 'diajukan') : ?>
+                                <div class="badge badge-warning">Menunggu Persetujuan</div>
+                              <?php elseif ($peminjaman['status_peminjaman'] == 'ditolak') : ?>
+                                <div class="badge badge-danger">Ditolak</div>
+                              <?php elseif ($peminjaman['status_peminjaman'] == 'dipinjam') : ?>
                                 <div class="badge badge-info">Dipinjam</div>
-                              <?php else : ?>
+                              <?php elseif ($peminjaman['status_peminjaman'] == 'dikembalikan') : ?>
                                 <div class="badge badge-success">Dikembalikan</div>
                               <?php endif;
                             endif; ?>

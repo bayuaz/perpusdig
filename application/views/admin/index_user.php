@@ -17,6 +17,8 @@
               echo 'Pengguna';
             } elseif ($this->uri->uri_string() == 'admin/level') {
               echo 'Level';
+            } elseif ($this->uri->uri_string() == 'admin/profile') {
+              echo 'Profile';
             }
 
             ?>
@@ -38,6 +40,8 @@
                 echo 'Pengguna';
               } elseif ($this->uri->uri_string() == 'admin/level') {
                 echo 'Level';
+              } elseif ($this->uri->uri_string() == 'admin/profile') {
+                echo 'Profile';
               }
 
               ?>
@@ -88,8 +92,8 @@
                             <?= $user['nama_level'] ?>
                             </div>
                           <td>
-                             <a class="btn btn-primary btn-action mr-1 ubah-pengguna" title="Edit" data-toggle="modal" data-target="#modal-ubah-pengguna" data-id="<?= $user['id_pengguna']; ?>" data-level="<?= $user['id_level']; ?>" data-nis-nip="<?= $user['nis_nip_pengguna']; ?>" data-nama="<?= $user['nama_pengguna']; ?>" data-pass="<?= $user['pass_pengguna']; ?>" data-email="<?= $user['email_pengguna']; ?>" data-nohp="<?= $user['nohp_pengguna'] ?>" data-alamat="<?= $user['alamat_pengguna']; ?>"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn btn-danger btn-action hapus-pengguna" title="Delete" data-toggle="modal" data-target="#modal-hapus-pengguna" data-id="<?= $user['id_pengguna']; ?>" data-level="<?= $user['id_level']; ?>" data-nis-nip="<?= $user['nis_nip_pengguna']; ?>" data-nama="<?= $user['nama_pengguna']; ?>" data-pass="<?= $user['pass_pengguna']; ?>" data-email="<?= $user['email_pengguna']; ?>" data-nohp="<?= $user['nohp_pengguna'] ?>" data-alamat="<?= $user['alamat_pengguna']; ?>"><i class="fas fa-trash"></i></a>
+                             <a class="btn btn-primary btn-action mr-1 ubah-pengguna" title="Edit" data-toggle="modal" data-target="#modal-ubah-pengguna" data-id="<?= $user['id_pengguna']; ?>" data-level="<?= $user['id_level']; ?>" data-nis-nip="<?= $user['nis_nip_pengguna']; ?>" data-nama="<?= $user['nama_pengguna']; ?>" data-pass="<?= $user['pass_pengguna']; ?>" data-email="<?= $user['email_pengguna']; ?>" data-nohp="<?= $user['nohp_pengguna'] ?>" data-bio="<?= $user['bio_pengguna']; ?>" data-alamat="<?= $user['alamat_pengguna']; ?>"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-danger btn-action hapus-pengguna" title="Delete" data-toggle="modal" data-target="#modal-hapus-pengguna" data-id="<?= $user['id_pengguna']; ?>" data-level="<?= $user['id_level']; ?>" data-nis-nip="<?= $user['nis_nip_pengguna']; ?>" data-nama="<?= $user['nama_pengguna']; ?>" data-pass="<?= $user['pass_pengguna']; ?>" data-email="<?= $user['email_pengguna']; ?>" data-nohp="<?= $user['nohp_pengguna'] ?>" data-bio="<?= $user['bio_pengguna']; ?>" data-alamat="<?= $user['alamat_pengguna']; ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>
@@ -213,6 +217,12 @@
                       </div>
                       <?php endif; ?>
                       <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">Bio</label>
+                    <div class="col-sm-9">
+                      <textarea name="bio" class="summernote-simple" autocomplete="off"></textarea>
                     </div>
                   </div>
                   <div class="form-group row mb-0">
@@ -346,6 +356,12 @@
                     </div>
                   </div>
                   <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">Bio</label>
+                    <div class="col-sm-9">
+                      <textarea name="bio" class="summernote-simple" id="ubah-bio" autocomplete="off"><?= set_value('bio') ?></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
                     <label class="col-sm-3 col-form-label">Alamat</label>
                     <div class="col-sm-9">
                       <textarea name="alamat" class="summernote-simple" id="ubah-alamat" autocomplete="off"><?= set_value('alamat') ?></textarea>
@@ -412,6 +428,12 @@
                     <label class="col-sm-3 col-form-label">No. HP</label>
                     <div class="col-sm-9">
                       <input type="text" name="nohp" class="form-control" id="hapus-nohp" value="<?= set_value('nohp') ?>" disabled="">
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">Bio</label>
+                    <div class="col-sm-9">
+                      <textarea name="bio" class="summernote-simple" id="hapus-bio"><?= set_value('bio') ?></textarea>
                     </div>
                   </div>
                   <div class="form-group row mb-0">

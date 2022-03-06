@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 	$("#table-buku").dataTable({
 	  "columnDefs": [
-	    { "sortable": false, "targets": [3, 4] }
+	    { "sortable": false, "targets": [4, 5] }
 	  ]
 	});
 
