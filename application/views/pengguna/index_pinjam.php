@@ -40,7 +40,7 @@
             <div class="col-12">
               <div class="card card-primary">
                 <div class="card-header">
-                  <h4 class="text-primary">Data Buku</h4>
+                  <h4 class="text-primary">Data Peminjaman</h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -65,35 +65,38 @@
                           <td><?= $pinjam['nama_kategori'] ?></td>
                           <td><?= tglIndo($pinjam['tgl_peminjaman']); ?></td>
                           <?php 
-                          $waktu_pengembalian  = date_create($pinjam['tgl_pengembalian']); // waktu pengembalian
-                          $waktu_sekarang = date_create(date('Y-m-d')); // waktu dikembalikan
-                          $diff  = date_diff($waktu_sekarang, $waktu_pengembalian);
+                          $waktu_dikembalikan  = empty($pinjam['tgl_dikembalikan']) ? date_create($pinjam['tgl_pengembalian']) : date_create($pinjam['tgl_dikembalikan']); // waktu dikembalikan
+                          $waktu_pengembalian = date_create($pinjam['tgl_pengembalian']); // waktu pengembalian seharusnya
+                          $diff  = date_diff($waktu_dikembalikan, $waktu_pengembalian);
+
+                          $dikembalikan = empty($pinjam['tgl_dikembalikan']) ? $pinjam['tgl_pengembalian'] : $pinjam['tgl_dikembalikan'];
                           ?>
-                          <td class="<?= $diff->invert > 0 ? 'text-danger' : 'text-success'; ?>"><?= tglIndo($pinjam['tgl_pengembalian']); ?></td>
+                          <td class="<?= $diff->invert > 0 ? 'text-danger' : 'text-success'; ?>"><?= empty($pinjam['tgl_dikembalikan']) ? tglIndo($pinjam['tgl_pengembalian']) : tglIndo($pinjam['tgl_dikembalikan']) ?></td>
                           <td>
                             <?php
 
-                            $waktu_pengembalian  = date_create($pinjam['tgl_pengembalian']); // waktu pengembalian
-                            $waktu_sekarang = date_create(); // waktu sekarang
-                            $diff  = date_diff($waktu_sekarang, $waktu_pengembalian);
-
                             if ($diff->invert > 0) :
-                              if ($pinjam['tgl_pengembalian'] == date('Y-m-d')) : ?>
-                              <div class="badge badge-info">Dipinjam</div>
-                              <?php else :
-                                if ($pinjam['status_peminjaman'] == 'dipinjam') : ?>
+                              // set denda
+                              $hari = $diff->d;
+                              $nominal = 3000;
+                              $denda = $hari * $nominal;
+
+                              if ($pinjam['status_peminjaman'] == 'dipinjam') : ?>
                                   <div class="badge badge-danger">Telat <?= $diff->d ?> hari</div>
-                                <?php elseif ($pinjam['status_peminjaman'] == 'diajukan') : ?>
-                                  <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
-                                  <div class="badge badge-danger">Ditolak</div>
-                                <?php elseif ($pinjam['status_peminjaman'] == 'dikembalikan') : ?>
-                                  <div class="badge badge-success">Dikembalikan</div>
-                                <?php endif;
-                              endif;
+                              <?php elseif ($pinjam['status_peminjaman'] == 'diajukan') : ?>
+                                <div class="badge badge-danger">Menunggu</div>
+                              <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
+                                <div class="badge badge-danger">Ditolak</div>
+                              <?php elseif ($pinjam['status_peminjaman'] == 'dikembalikan') : ?>
+                                <div class="badge badge-success">Dikembalikan</div>
+                              <?php endif;
                             else :
-                              if ($pinjam['status_peminjaman'] == 'diajukan') : ?>
-                                <div class="badge badge-warning">Menunggu Persetujuan</div>
+                              if ($pinjam['status_peminjaman'] == 'diajukan') : 
+                                if (empty($pinjam['tgl_dikembalikan'])) : ?>
+                                  <div class="badge badge-warning">Menunggu</div>
+                                <?php else : ?>
+                                  <div class="badge badge-danger">Menunggu</div>
+                                <?php endif; ?>
                               <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
                                 <div class="badge badge-danger">Ditolak</div>
                               <?php elseif ($pinjam['status_peminjaman'] == 'dipinjam') : ?>
@@ -114,12 +117,13 @@
                             <a class="btn btn-primary btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $pinjam['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$pinjam['file_buku']) ?>"><i class="fas fa-book-reader"></i></a>
                             <?php else : ?>
                             <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif;
+                            elseif ($pinjam['status_peminjaman'] == 'diajukan') : ?>
+                            <a class="btn btn-info btn-action mr-1 info-peminjaman" title="Info Peminjaman" data-toggle="modal" data-target="#modal-info-peminjaman" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-denda="<?= $pinjam['status_peminjaman'] == 'dikembalikan' || !empty($pinjam['tgl_dikembalikan']) ? rupiah($pinjam['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>"><i class="fas fa-info-circle"></i></a>
                             <?php endif; ?>
-                            <?php endif; 
-
-                            $denda = 2000 * $diff->d;
-                            ?>
-                            <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-denda="<?= $diff->invert > 0 ? rupiah($denda) : rupiah(0) ?>"><i class="fas fa-book-dead"></i></a>
+                            <?php if ($pinjam['status_peminjaman'] != 'diajukan') : ?>
+                            <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? hariIndo(date('l')) . ', ' . tglIndo(date('Y-m-d')) : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-status="<?= $pinjam['status_peminjaman'] ?>" data-denda="<?= empty($pinjam['denda_peminjaman']) ? ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) : rupiah($pinjam['denda_peminjaman']) ?>"><i class="fas fa-book-dead"></i></a>
+                            <?php endif; ?>
                           </td>
                         </tr>
                         <?php endforeach ?>
@@ -163,9 +167,9 @@
                     </div>
                     <label class="col-sm-3 col-form-label">Dikembalikan</label>
                     <div class="col-sm-9">
-                      <p id="kembalikan-buku-tgl-dikembalikan"><?= hariIndo(date('l')) . ', ' . tglIndo(date('Y-m-d')); ?></p>
+                      <p id="kembalikan-buku-tgl-dikembalikan"></p>
                     </div>
-                    <label class="col-sm-3 col-form-label">Denda</label>
+                    <label class="col-sm-3 col-form-label" id="label-denda">Denda</label>
                     <div class="col-sm-9">
                       <p class="font-weight-bold" id="kembalikan-buku-denda"></p>
                     </div>
@@ -206,4 +210,49 @@
           </div>
         </div>
         <!-- End modal baca buku -->
+        <!-- Start modal kembalikan buku -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal-info-peminjaman">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Info Peminjaman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group row mb-0">
+                  <label class="col-sm-3 col-form-label">Nama</label>
+                  <div class="col-sm-9">
+                    <p id="info-peminjaman-nama"></p>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Judul</label>
+                  <div class="col-sm-9">
+                    <p id="info-peminjaman-judul"></p>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Pinjam</label>
+                  <div class="col-sm-9">
+                    <p id="info-peminjaman-tgl-pinjam"></p>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Kembali</label>
+                  <div class="col-sm-9">
+                    <p id="info-peminjaman-tgl-kembali"></p>
+                  </div>
+                  <label class="col-sm-3 col-form-label" id="info-label-dikembalikan">Dikembalikan</label>
+                  <div class="col-sm-9">
+                    <p id="info-peminjaman-tgl-dikembalikan"></p>
+                  </div>
+                  <label class="col-sm-3 col-form-label" id="info-label-denda">Denda</label>
+                  <div class="col-sm-9">
+                    <p class="font-weight-bold" id="info-peminjaman-denda"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End modal kembalikan buku -->
       </div>

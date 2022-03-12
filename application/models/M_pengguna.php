@@ -153,7 +153,7 @@ class M_pengguna extends CI_Model {
 
     function cek_pinjam_buku($params) {
         // query
-        $sql = "SELECT * FROM tbl_peminjaman WHERE id_pengguna = ? AND id_buku = ? AND (status_peminjaman = 'dipinjam' OR status_peminjaman = 'diajukan'";
+        $sql = "SELECT * FROM tbl_peminjaman WHERE id_pengguna = ? AND id_buku = ? AND (status_peminjaman = 'dipinjam' OR status_peminjaman = 'diajukan')";
         // execute
         $query = $this->db->query($sql, $params);
         // cek result

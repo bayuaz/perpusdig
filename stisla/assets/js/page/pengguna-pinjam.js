@@ -1,16 +1,17 @@
 "use strict";
 
 $(document).ready(function() {
-	var judul_pinjam, judul_kembali;
+	var judul_pinjam, judul_kembali, status_peminjaman, tgl_dikembalikan;
 
 	$("#table-pinjam").dataTable({
 	  "columnDefs": [
-	    { "sortable": false, "targets": [5, 6] }
+	    { "sortable": false, "targets": [6, 7] }
 	  ]
 	});
 
 	$('.kembalikan-buku').click(function() {
 		judul_kembali = $(this).data('judul');
+		status_peminjaman = $(this).data('status');
 
 		$('#kembalikan-buku-id').val($(this).data('id')).change();
 		$('#kembalikan-buku-nama').text($(this).data('nama')).change();
@@ -18,6 +19,16 @@ $(document).ready(function() {
 		$('#kembalikan-buku-tgl-pinjam').text($(this).data('tgl-pinjam')).change();
 		$('#kembalikan-buku-tgl-kembali').text($(this).data('tgl-kembali')).change();
 		$('#kembalikan-buku-denda').text($(this).data('denda')).change();
+		$('#kembalikan-buku-tgl-dikembalikan').text($(this).data('tgl-dikembalikan')).change();
+
+		if (status_peminjaman == 'ditolak') {
+			$('#label-denda').hide();
+			$('#kembalikan-buku-denda').hide();
+		}
+
+		if (status_peminjaman == 'diajukan') {
+			$('#konfirmasi-kembali').hide();
+		}
 	});
 
 	$('.baca-buku').click(function() {
@@ -51,5 +62,28 @@ $(document).ready(function() {
 	     }
 	   });
 	});
+
+	$('.info-peminjaman').click(function() {
+		tgl_dikembalikan = $(this).data('tgl-dikembalikan');
+
+		$('#info-peminjaman-nama').text($(this).data('nama')).change();
+		$('#info-peminjaman-judul').text($(this).data('judul')).change();
+		$('#info-peminjaman-tgl-pinjam').text($(this).data('tgl-pinjam')).change();
+		$('#info-peminjaman-tgl-kembali').text($(this).data('tgl-kembali')).change();
+		$('#info-peminjaman-tgl-dikembalikan').text(tgl_dikembalikan).change();
+		$('#info-peminjaman-denda').text($(this).data('denda')).change();
+
+		if (tgl_dikembalikan == '') {
+			$('#info-label-dikembalikan').hide();
+			$('#info-peminjaman-tgl-dikembalikan').hide();
+			$('#info-label-denda').hide();
+			$('#info-peminjaman-denda').hide();
+		} else {
+			$('#info-label-dikembalikan').show();
+			$('#info-peminjaman-tgl-dikembalikan').show();
+			$('#info-label-denda').show();
+			$('#info-peminjaman-denda').show();
+		}
+	})
 });
 

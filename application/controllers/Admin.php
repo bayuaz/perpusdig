@@ -480,6 +480,59 @@ class Admin extends CI_Controller {
 		$this->vic_lib->aview('index_peminjaman', $data);
 	}
 
+	public function pinjam_buku_proses() {
+		$this->form_validation->set_rules('id_pengguna', 'ID Pengguna', 'trim|required');
+		$this->form_validation->set_rules('id_buku', 'ID Buku', 'trim|required');
+		$this->form_validation->set_rules('action', 'Action Proses', 'trim|required');
+
+		// get data
+		$action = $this->input->post('action');
+		$id_pengguna = $this->input->post('id_pengguna');
+		$id_buku = $this->input->post('id_buku');
+		$params_id = [$id_pengguna, $id_buku];
+		$detail_buku = $this->M_admin->get_detail_buku($id_buku);
+		$id_peminjaman = $this->M_admin->get_id_peminjaman($params_id);
+		$detail_peminjaman = $this->M_admin->get_detail_peminjaman($id_peminjaman);
+
+		// cek data
+		if (empty($detail_buku)) {
+			$this->session->set_userdata('failed', 'Proses peminjaman gagal!');
+			$this->peminjaman();
+		}
+
+		if ($this->form_validation->run() !== false) {
+			$params = [
+				'mdb' => $this->session->userdata('id'),
+				'mdb_name' => $this->session->userdata('nama'),
+				'mdd' => date('Y-m-d H:i:s'),
+			];
+
+			if ($action == 'Tolak') {
+				$params['status_peminjaman'] = 'ditolak';
+			} elseif ($action == 'Setujui') {
+				$params['status_peminjaman'] = empty($detail_peminjaman['tgl_dikembalikan']) ? 'dipinjam' : 'dikembalikan';
+			} else {
+				$this->session->set_userdata('failed', 'Proses peminjaman gagal!');
+				$this->peminjaman();
+			}
+
+			$where = [
+				'id_peminjaman' => $id_peminjaman
+			];
+
+			if ($this->M_admin->update_tbl_peminjaman($params, $where)) {
+				$this->session->set_userdata('success', 'Proses peminjaman berhasil!');
+				redirect('admin/peminjaman');
+			} else {
+				$this->session->set_userdata('failed', 'Proses peminjaman gagal!');
+				$this->peminjaman();
+			}
+		} else {
+			$this->session->set_userdata('failed', 'Proses peminjaman gagal!!');
+			$this->peminjaman();
+		}
+	}
+
 	public function pengguna() {
 		// get list data
 		$data['data_user'] = $this->M_admin->get_data_user();
@@ -779,6 +832,7 @@ class Admin extends CI_Controller {
 			$where = ['id_pengguna' => $this->input->post('id')];
 
 			if ($this->M_admin->update_tbl_pengguna($params, $where)) {
+				$this->session->set_userdata('nama', $this->input->post('nama'));
 				$this->session->set_userdata('success', 'Ubah data profile berhasil!');
 				redirect('admin/profile');
 			} else {

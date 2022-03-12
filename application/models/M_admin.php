@@ -219,6 +219,39 @@ class M_admin extends CI_Model {
         }
     }
 
+    function get_id_peminjaman($params) {
+        // query
+        $sql = "SELECT id_peminjaman FROM tbl_peminjaman
+                WHERE id_pengguna = ? AND id_buku = ?
+                ORDER BY id_peminjaman DESC LIMIT 1";
+        // execute
+        $query = $this->db->query($sql, $params);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            $query->free_result();
+            return $result['id_peminjaman'];
+        } else {
+            return array();
+        }
+    }
+
+    function get_detail_peminjaman($params) {
+        // query
+        $sql = "SELECT * FROM tbl_peminjaman
+                WHERE id_peminjaman = ?";
+        // execute
+        $query = $this->db->query($sql, $params);
+        // cek result
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            $query->free_result();
+            return $result;
+        } else {
+            return array();
+        }
+    }
+
     function get_data_logs() {
         // query
         $sql = "SELECT DISTINCT a.*, b.nama_pengguna, c.nama_level FROM tbl_logs a
@@ -423,5 +456,9 @@ class M_admin extends CI_Model {
 
     function delete_tbl_level($where) {
         return $this->db->delete('tbl_level', $where);
+    }
+
+    function update_tbl_peminjaman($params, $where) {
+        return $this->db->update('tbl_peminjaman', $params, $where);
     }
 }

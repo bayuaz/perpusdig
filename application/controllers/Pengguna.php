@@ -91,7 +91,6 @@ class Pengguna extends CI_Controller {
 	}
 
 	public function kembalikan_buku_proses() {
-		print_r($_POST);
 		$this->form_validation->set_rules('id','ID Buku', 'trim|required');
 
 		// get input dan data
@@ -99,16 +98,23 @@ class Pengguna extends CI_Controller {
 		$id_buku = $this->input->post('id');
 		$params_id = [$id_pengguna, $id_buku];
 		$id_peminjaman = $this->M_pengguna->get_id_peminjaman($params_id);
-		print_r($id_peminjaman);die;
 		$detail_buku = $this->M_pengguna->get_detail_buku($id_buku);
 		$detail_peminjaman = $this->M_pengguna->get_detail_peminjaman($id_peminjaman);
 		$cek_pinjam_buku = $this->M_pengguna->cek_pinjam_buku($params_id);
 
 		// set denda pengembalian
-		$waktu_pengembalian  = date_create($pinjam['tgl_pengembalian']); // waktu pengembalian
+		$waktu_pengembalian  = date_create($detail_peminjaman['tgl_pengembalian']); // waktu pengembalian
         $waktu_sekarang = date_create(); // waktu sekarang
         $diff  = date_diff($waktu_sekarang, $waktu_pengembalian);
-        $denda = 2000 * $diff->d;
+
+        if ($diff->invert > 0) {
+          $hari = $diff->d;
+          $nominal = 3000;
+
+          $denda = $hari * $nominal;
+        } else {
+        	$denda = 0;
+        }
 
 		// cek data buku
 		if (empty($detail_buku)) {
@@ -132,7 +138,7 @@ class Pengguna extends CI_Controller {
 				'status_peminjaman' => 'dikembalikan',
 				'tgl_dikembalikan' => date('Y-m-d'),
 				'denda_peminjaman' => $denda,
-				'status_peminjaman' => 'dikembalikan',
+				'status_peminjaman' => 'diajukan',
 				'mdb' => $this->session->userdata('id'),
 				'mdb_name' => $this->session->userdata('nama'),
 				'mdd' => date('Y-m-d H:i:s'),
@@ -215,6 +221,7 @@ class Pengguna extends CI_Controller {
 			$where = ['id_pengguna' => $this->input->post('id')];
 
 			if ($this->M_pengguna->update_tbl_pengguna($params, $where)) {
+				$this->session->set_userdata('nama', $this->input->post('nama'));
 				$this->session->set_userdata('success', 'Ubah data profile berhasil!');
 				redirect('pengguna/profile');
 			} else {
