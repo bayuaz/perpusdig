@@ -214,47 +214,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-              <div class="card card-danger">
-                <div class="card-header">
-                  <h4 class="text-danger">Sering Dipinjam</h4>
-                  <div class="card-header-action">
-                   <div class="badge badge-danger"><i class="fas fa-fire"></i></div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <?php if (!empty($data_sering_dipinjam)) : ?>
-                  <ul class="list-unstyled list-unstyled-border">
-                  <?php foreach ($data_sering_dipinjam as $sering_dipinjam) : ?>
-                    <li class="media">
-                      <img class="mr-3 rounded" width="55" src="<?= base_url('assets/uploads/cover/'.$sering_dipinjam['cover_buku']) ?>" alt="product">
-                      <div class="media-body">
-                        <div class="float-right"><div class="font-weight-600 text-danger text-small"><?= $sering_dipinjam['jumlah_dipinjam'] ?>x Dipinjam</div></div>
-                        <div class="media-title"><?= $sering_dipinjam['judul_buku'] ?></div>
-                        <span class="text-small text-muted"><?= $sering_dipinjam['nama_kategori'] ?></span>
-                      </div>
-                    </li>
-                  <?php endforeach; ?>
-                  </ul>
-                  <?php else : ?>
-                    <div class="media">
-                      <div class="media-body">
-                        <div class="media-title text-center text-danger">
-                          <i class="fa fa-2x fa-file-alt"></i>
-                          <div class="mt-3"> 
-                            <span class="text-small"><i>Belum ada data</i></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-8 col-md-12 col-12 col-sm-12">
               <div class="card card-primary">
                 <div class="card-header">
                   <h4 class="text-primary">Data Buku Terbaru</h4>
@@ -342,6 +301,9 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="row">
+            
           </div>
         </section>
         <!-- Start modal tambah buku -->

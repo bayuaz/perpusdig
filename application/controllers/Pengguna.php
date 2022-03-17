@@ -8,7 +8,7 @@ class Pengguna extends CI_Controller {
 		date_default_timezone_set('Asia/Jakarta');
 
 		// cek session dan level pengguna
-        if (!in_array($this->M_pengguna->cek_level(), ['2', '3', '4'])) {
+        if (!in_array($this->M_pengguna->cek_level(), ['2', '3', '4', '5'])) {
             redirect('login');
         }
     }

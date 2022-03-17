@@ -69,6 +69,10 @@ $(document).ready(function() {
 		swal('File Tidak Ada', 'File belum diunggah oleh Admin Perpustakaan!', 'error');
 	});
 
+	$(".cover-kosong").click(function() {
+		swal('Cover Tidak Ada', 'Cover belum diunggah oleh Admin Perpustakaan!', 'error');
+	});
+
 	$('#konfirmasi-pinjam').click(function(e) {
 	  e.preventDefault();
 	  let form = $(this).parents('form');

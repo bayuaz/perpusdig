@@ -129,10 +129,12 @@
                           </td>
                           <td>
                             <?php if ($peminjaman['status_peminjaman'] == 'diajukan') : ?>
-                            <a class="btn btn-primary btn-action mr-1 proses-peminjaman" title="Proses Peminjaman" data-toggle="modal" data-target="#modal-proses-peminjaman" data-nis-nip-pengguna="<?= $peminjaman['nis_nip_pengguna']; ?>" data-id-buku="<?= $peminjaman['id_buku'] ?>" data-kode-buku="<?= $peminjaman['kode_buku']; ?>" data-judul="<?= $peminjaman['judul_buku']; ?>" data-no="<?= $peminjaman['nobuku_peminjaman']; ?>" data-nama="<?= $peminjaman['nama_pengguna'] ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($peminjaman['tgl_peminjaman']))) . ', ' . tglIndo($peminjaman['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($peminjaman['tgl_pengembalian']))) . ', ' . tglIndo($peminjaman['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($peminjaman['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($peminjaman['tgl_dikembalikan']))) . ', ' . tglIndo(date($peminjaman['tgl_dikembalikan'])) ?>" data-denda="<?= $peminjaman['status_peminjaman'] == 'dikembalikan' ? rupiah($peminjaman['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>" data-status="<?= empty($peminjaman['tgl_dikembalikan']) ? 'Pinjam Buku' : 'Kembalikan Buku'; ?>"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-warning btn-action mr-1 proses-peminjaman" title="Proses Peminjaman" data-toggle="modal" data-target="#modal-proses-peminjaman" data-nis-nip-pengguna="<?= $peminjaman['nis_nip_pengguna']; ?>" data-id-buku="<?= $peminjaman['id_buku'] ?>" data-kode-buku="<?= $peminjaman['kode_buku']; ?>" data-judul="<?= $peminjaman['judul_buku']; ?>" data-no="<?= $peminjaman['nobuku_peminjaman']; ?>" data-nama="<?= $peminjaman['nama_pengguna'] ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($peminjaman['tgl_peminjaman']))) . ', ' . tglIndo($peminjaman['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($peminjaman['tgl_pengembalian']))) . ', ' . tglIndo($peminjaman['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($peminjaman['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($peminjaman['tgl_dikembalikan']))) . ', ' . tglIndo(date($peminjaman['tgl_dikembalikan'])) ?>" data-denda="<?= $peminjaman['status_peminjaman'] == 'dikembalikan' ? rupiah($peminjaman['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>" data-status="<?= empty($peminjaman['tgl_dikembalikan']) ? 'Pinjam Buku' : 'Kembalikan Buku'; ?>"><i class="fas fa-tasks"></i></a>
                             <?php else : ?>
                             <a class="btn btn-info btn-action mr-1 info-peminjaman" title="Info Peminjaman" data-toggle="modal" data-target="#modal-info-peminjaman" data-judul="<?= $peminjaman['judul_buku']; ?>" data-no="<?= $peminjaman['nobuku_peminjaman']; ?>" data-nama="<?= $peminjaman['nama_pengguna'] ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($peminjaman['tgl_peminjaman']))) . ', ' . tglIndo($peminjaman['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($peminjaman['tgl_pengembalian']))) . ', ' . tglIndo($peminjaman['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($peminjaman['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($peminjaman['tgl_dikembalikan']))) . ', ' . tglIndo(date($peminjaman['tgl_dikembalikan'])) ?>" data-denda="<?= $peminjaman['status_peminjaman'] == 'dikembalikan' ? rupiah($peminjaman['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>"><i class="fas fa-info-circle"></i></a>
                             <?php endif; ?>
+                            <a class="btn btn-primary btn-action mr-1 ubah-peminjaman" title="Edit Peminjaman" data-toggle="modal" data-target="#modal-ubah-peminjaman" data-id="<?= $peminjaman['id_peminjaman'] ?>" data-nis-nip="<?= $peminjaman['nama_pengguna'] . ' ('.$peminjaman['nis_nip_pengguna'].')'; ?>" data-judul="<?= $peminjaman['judul_buku'] ?>" data-no="<?= $peminjaman['nobuku_peminjaman'] ?>"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger btn-action hapus-peminjaman" title="Hapus Peminjaman" data-toggle="modal" data-target="#modal-hapus-peminjaman" data-id="<?= $peminjaman['id_peminjaman'] ?>" data-nis-nip="<?= $peminjaman['nama_pengguna'] . ' ('.$peminjaman['nis_nip_pengguna'].')'; ?>" data-judul="<?= $peminjaman['judul_buku'] ?>" data-no="<?= $peminjaman['nobuku_peminjaman'] ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>
@@ -358,4 +360,97 @@
           </div>
         <?= form_close(); ?>
         <!-- End modal import peminjaman -->
+        <!-- Start modal ubah peminjaman -->
+        <?php $attributes = ['class' => 'needs-validation was-validated', 'novalidate' => ''] ?>
+        <?= form_open_multipart('admin/ubah_peminjaman_proses', $attributes) ?>
+          <div class="modal fade" tabindex="-1" role="dialog" id="modal-ubah-peminjaman">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Ubah Data Peminjaman</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" name="id" id="ubah-id" value="<?= set_value('id') ?>">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nama (NIS/NIP)</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="nis_nip" class="form-control" id="ubah-nis-nip" value="<?= set_value('nis_nip') ?>" disabled="">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Buku</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="judul" class="form-control" id="ubah-judul" value="<?= set_value('judul') ?>" disabled="">
+                    </div>
+                  </div>
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">No. Buku</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="no" class="form-control" id="ubah-no" required="" autocomplete="off" value="<?= set_value('no') ?>">
+                      <?php if (form_error('no')) : ?>
+                      <div class="invalid-feedback">
+                        No Buku wajib diisi!
+                      </div>
+                      <?php else : ?>
+                      <div class="invalid-feedback">
+                        No Buku wajib diisi!
+                      </div>
+                      <?php endif; ?>                      
+                      <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?= form_close(); ?>
+        <!-- End modal ubah peminjaman -->
+        <!-- Start modal hapus peminjaman -->
+        <?= form_open('admin/hapus_peminjaman_proses') ?>
+          <div class="modal fade" tabindex="-1" role="dialog" id="modal-hapus-peminjaman">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Hapus Data Peminjaman</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" name="id" id="hapus-id" value="<?= set_value('id') ?>">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nama (NIS/NIP)</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="nis_nip" class="form-control" id="hapus-nis-nip" value="<?= set_value('nis_nip') ?>" disabled="">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Buku</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="judul" class="form-control" id="hapus-judul" value="<?= set_value('judul') ?>" disabled="">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nomor Buku</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="no" class="form-control" id="hapus-no" value="<?= set_value('no') ?>" disabled="">
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?= form_close(); ?>
+        <!-- End modal hapus peminjaman -->
        </div> 

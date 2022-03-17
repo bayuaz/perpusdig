@@ -86,7 +86,7 @@
 
     $this->session->unset_userdata('failed');
   ?>
-
+  <?php if ($this->uri->uri_string() == 'admin' || $this->uri->uri_string() == 'admin/index') : ?>
   <script type="text/javascript">
     var ctx = document.getElementById("seringDipinjam").getContext('2d');
     var myChart = new Chart(ctx, {
@@ -180,5 +180,6 @@
       }
     });
   </script>
+  <?php endif; ?>
 </body>
 </html>

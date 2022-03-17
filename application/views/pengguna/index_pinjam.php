@@ -109,9 +109,13 @@
                             endif; ?>
                           </td>
                           <td>
+                            <?php if (!empty($buku['cover_buku'])) : ?>
                             <div class="gallery">
-                              <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $pinjam['cover_buku'] ?>" data-title="<?= $pinjam['judul_buku'] ?>"></div>
+                              <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $buku['cover_buku'] ?>" data-title="<?= $buku['judul_buku'] ?>"></div>
                             </div>
+                            <?php else : ?>
+                            <a class="btn btn-warning btn-action mr-1 cover-kosong" title="Cover belum ada"><i class="fas fa-times"></i></a>
+                            <?php endif; ?>
                           </td>
                           <td>
                             <?php if ($pinjam['status_peminjaman'] != 'diajukan' && $pinjam['status_peminjaman'] != 'ditolak') : ?>

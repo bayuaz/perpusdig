@@ -76,6 +76,20 @@ $(document).ready(function() {
 			$('#info-peminjaman-no').text($(this).data('no')).change();
 		}
 	});
+
+	$('.ubah-peminjaman').click(function() {
+	    $('#ubah-id').val($(this).data('id')).change();
+	    $('#ubah-nis-nip').val($(this).data('nis-nip')).change();
+	    $('#ubah-judul').val($(this).data('judul')).change();
+	    $('#ubah-no').val($(this).data('no')).change();
+  	});
+
+  	$('.hapus-peminjaman').click(function() {
+	    $('#hapus-id').val($(this).data('id')).change();
+	    $('#hapus-nis-nip').val($(this).data('nis-nip')).change();
+	    $('#hapus-judul').val($(this).data('judul')).change();
+	    $('#hapus-no').val($(this).data('no')).change();
+  	});
 });
 
 function isNumberKey(evt){

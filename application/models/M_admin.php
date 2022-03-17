@@ -133,40 +133,6 @@ class M_admin extends CI_Model {
         }
     }
 
-    function import_buku($arrData) {
-        foreach ($arrData as $key => $each_data) {
-            $data = [
-                'id_kategori' => $each_data['1'],
-                'bentuk_buku' => $each_data['2'],
-                'judul_buku' => $each_data['3'],
-                'kode_buku' => $each_data['4'],
-                'pengarang_buku' => $each_data['5'],
-                'penerbit_buku' => $each_data['6'],
-                'tahun_terbit_buku' => '2022',
-                'jumlah_buku' => $each_data['8'],
-                'create_by' => $this->session->userdata('id'),
-                'create_name' => $this->session->userdata('nama'),
-                'create_date' => date('Y-m-d H:i:s')
-            ];
-
-            if (empty($this->get_detail_kategori($each_data['1']))) {
-                continue;
-            }
-
-            if (empty($this->cek_kode_buku($each_data['4']))) {
-                continue;
-            }
-
-            $this->db->insert('tbl_buku', $data);
-        }
-
-        if ($this->db->affected_rows() > 0){
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
     function get_data_buku_terbaru() {
         // query
         $sql = "SELECT a.*, b.nama_kategori FROM tbl_buku a
@@ -293,7 +259,7 @@ class M_admin extends CI_Model {
                 INNER JOIN tbl_level c ON b.id_level = c.id_level
                 INNER JOIN (SELECT MAX(id_logs) as id_logs FROM tbl_logs GROUP BY nis_nip_pengguna) d ON d.id_logs = a.id_logs
                 ORDER BY a.create_date DESC 
-                LIMIT 4";
+                LIMIT 10";
         // execute
         $query = $this->db->query($sql);
         // cek result
@@ -313,7 +279,7 @@ class M_admin extends CI_Model {
                 INNER JOIN tbl_kategori c ON b.id_kategori = c.id_kategori
                 GROUP BY a.kode_buku
                 ORDER BY jumlah_dipinjam DESC
-                LIMIT 4";
+                LIMIT 5";
         // execute
         $query = $this->db->query($sql);
         // cek result
@@ -576,6 +542,40 @@ class M_admin extends CI_Model {
             }
 
             $this->db->insert('tbl_pengguna', $data);
+        }
+
+        if ($this->db->affected_rows() > 0){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    function import_buku($arrData) {
+        foreach ($arrData as $key => $each_data) {
+            $data = [
+                'id_kategori' => $each_data['1'],
+                'bentuk_buku' => $each_data['2'],
+                'judul_buku' => $each_data['3'],
+                'kode_buku' => $each_data['4'],
+                'pengarang_buku' => $each_data['5'],
+                'penerbit_buku' => $each_data['6'],
+                'tahun_terbit_buku' => $each_data['7'],
+                'jumlah_buku' => $each_data['8'],
+                'create_by' => $this->session->userdata('id'),
+                'create_name' => $this->session->userdata('nama'),
+                'create_date' => date('Y-m-d H:i:s')
+            ];
+
+            if (empty($this->get_detail_kategori($each_data['1']))) {
+                continue;
+            }
+
+            if (!empty($this->cek_kode_buku($each_data['4']))) {
+                continue;
+            }
+
+            $this->db->insert('tbl_buku', $data);
         }
 
         if ($this->db->affected_rows() > 0){

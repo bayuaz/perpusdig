@@ -90,7 +90,7 @@
                             <div class="badge badge-warning">
                             <?php elseif ($user['id_level'] == '4') : ?>
                             <div class="badge badge-light">
-                            <?php elseif ($user['id_level'] == '6') : ?>
+                            <?php elseif ($user['id_level'] == '5') : ?>
                             <div class="badge badge-secondary">
                             <?php endif; ?>
                             <?= $user['nama_level'] ?>

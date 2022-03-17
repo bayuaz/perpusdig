@@ -37,8 +37,6 @@ class Admin extends CI_Controller {
 		$data['data_kategori'] = $this->M_admin->get_data_kategori();
 		$data['data_sering_login'] = $this->M_admin->get_data_sering_login();
 
-		// print_r($data['data_buku_sering_dipinjam']);die;
-
 		// get detail data
 		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 		$data['detail_logs_user'] = $this->M_admin->get_detail_logs_user(array($this->session->userdata('nis_nip')));
@@ -586,13 +584,6 @@ class Admin extends CI_Controller {
 		$this->vic_lib->aview('index_peminjaman', $data);
 	}
 
-	public function tambah_peminjaman() {
-		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
-
-		$this->vic_lib->aview('tambah_peminjaman', $data);
-	}
-
 	public function tambah_peminjaman_proses() {
 		$this->form_validation->set_rules('nis_nip','NIS/NIP Pengguna', 'trim|required');
 		$this->form_validation->set_rules('kode','Kode Buku', 'trim|required');
@@ -641,6 +632,74 @@ class Admin extends CI_Controller {
 			}
 		} else {
 			$this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+			$this->peminjaman();
+		}
+	}
+
+	public function ubah_peminjaman_proses() {
+		$this->form_validation->set_rules('id','ID Peminjaman', 'trim|required');
+		$this->form_validation->set_rules('no','Nomor Buku', 'trim|required');
+
+		// get input
+		$id_peminjaman = $this->input->post('id');
+
+		// get detail peminjaman
+		$detail_peminjaman = $this->M_admin->get_detail_peminjaman($id_peminjaman);
+
+		if (empty($detail_peminjaman)) {
+			$this->session->set_userdata('failed', 'Ubah data peminjaman gagal!');
+			$this->peminjaman();
+		}
+
+		if ($this->form_validation->run() !== false) {
+			$params = [
+				'nobuku_peminjaman' => $this->input->post('no'),
+				'mdb' => $this->session->userdata('id'),
+				'mdb_name' => $this->session->userdata('nama'),
+				'mdd' => date('Y-m-d H:i:s'),
+			];
+
+			$where = ['id_peminjaman' => $this->input->post('id')];
+
+			if ($this->M_admin->update_tbl_peminjaman($params, $where)) {
+				$this->session->set_userdata('success', 'Ubah data peminjaman berhasil!');
+				redirect('admin/peminjaman');
+			} else {
+				$this->session->set_userdata('failed', 'Ubah data peminjaman gagal!');
+				$this->peminjaman();
+			}
+		} else {
+			$this->session->set_userdata('failed', 'Ubah data peminjaman gagal!');
+			$this->peminjaman();
+		}
+	}
+
+	public function hapus_peminjaman_proses() {
+		$this->form_validation->set_rules('id','ID Peminjaman', 'trim|required');
+
+		// get input
+		$id_peminjaman = $this->input->post('id');
+
+		// get detail peminjaman
+		$detail_peminjaman = $this->M_admin->get_detail_peminjaman($id_peminjaman);
+
+		if (empty($detail_peminjaman)) {
+			$this->session->set_userdata('failed', 'Ubah data peminjaman gagal!');
+			$this->peminjaman();
+		}
+
+		if ($this->form_validation->run() !== false) {
+			$where = ['id_peminjaman' => $this->input->post('id')];
+
+			if ($this->M_admin->delete_tbl_peminjaman($where)) {
+				$this->session->set_userdata('success', 'Hapus data peminjaman berhasil!');
+				redirect('admin/peminjaman');
+			} else {
+				$this->session->set_userdata('failed', 'Hapus data peminjaman gagal!');
+				$this->peminjaman();
+			}
+		} else {
+			$this->session->set_userdata('failed', 'Hapus data peminjaman gagal!');
 			$this->peminjaman();
 		}
 	}
