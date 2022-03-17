@@ -33,6 +33,9 @@
   <script src="<?= base_url('stisla/node_modules/sweetalert/dist/sweetalert.min.js') ?>"></script>
   <?php elseif ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' | $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses' || $this->uri->uri_string() == 'admin/profile') : ?>
   <script src="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.js') ?>"></script>
+  <?php elseif ($this->uri->uri_string() == 'admin' || $this->uri->uri_string() == 'admin/index') :  ?>
+  <script src="<?= base_url('stisla/node_modules/jquery-sparkline/jquery.sparkline.min.js') ?>"></script>
+  <script src="<?= base_url('stisla/node_modules/chart.js/dist/Chart.min.js') ?>"></script>
   <?php endif; ?>
 
   <!-- Template JS File -->
@@ -83,5 +86,99 @@
 
     $this->session->unset_userdata('failed');
   ?>
+
+  <script type="text/javascript">
+    var ctx = document.getElementById("seringDipinjam").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          <?php foreach ($data_sering_dipinjam as $sering_dipinjam) : ?>
+          "<?= $sering_dipinjam['judul_buku'] ?>",
+          <?php endforeach ?>        
+        ],
+        datasets: [{
+          label: 'Statistics',
+          data: [
+            <?php foreach ($data_sering_dipinjam as $sering_dipinjam) : ?>
+            "<?= $sering_dipinjam['jumlah_dipinjam'] ?>",
+            <?php endforeach ?>  
+          ],
+          borderWidth: 2,
+          backgroundColor: '#ffa426',
+          borderColor: '#ffa426',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#ffffff',
+          pointRadius: 4
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            gridLines: {
+              drawBorder: false,
+              color: '#f2f2f2',
+            },
+            ticks: {
+              beginAtZero: true,
+              stepSize: 150
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              display: false
+            },
+            gridLines: {
+              display: false
+            }
+          }]
+        },
+      }
+    });
+
+    var ctx = document.getElementById("topLogin").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [
+            <?php foreach ($data_sering_login as $sering_login) : ?>
+            <?= $sering_login['jumlah_login'] ?>,
+            <?php endforeach ?>
+          ],
+          backgroundColor: [
+            <?php foreach($data_sering_login as $key => $sering_login) :
+            if ($key == 0) : ?>
+            '#fc544b',
+            <?php elseif ($key == 1) : ?>
+            '#ffa426',
+            <?php elseif ($key == 2) : ?>
+            '#63ed7a',
+            <?php elseif ($key == 3) : ?>
+            '#6777ef',
+            <?php else : ?>
+            '#191d21',
+            <?php endif ?>
+            <?php endforeach ?>
+          ],
+          label: 'Dataset 1'
+        }],
+        labels: [
+          <?php foreach($data_sering_login as $sering_login) : ?>
+          "<?= $sering_login['nama_pengguna']; ?>",
+          <?php endforeach ?>
+        ],
+      },
+      options: {
+        responsive: true,
+        legend: {
+          position: 'bottom',
+        },
+      }
+    });
+  </script>
 </body>
 </html>

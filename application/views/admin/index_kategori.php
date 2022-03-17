@@ -63,6 +63,7 @@
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
+                          <th>Kode</th>
                           <th>Nama</th>
                           <th>Keterangan</th>
                           <th>Jumlah Buku</th>
@@ -73,12 +74,13 @@
                         <?php foreach ($data_kategori_buku as $key => $kategori_buku) : ?>
                         <tr>
                           <td><?= $key+1; ?></td>
+                          <td><?= $kategori_buku['id_kategori'] ?></td>
                           <td><?= $kategori_buku['nama_kategori'] ?></td>
-                          <td><?= $kategori_buku['ket_kategori'] ?></td>
+                          <td><?= $kategori_buku['deskripsi_kategori'] ?></td>
                           <td><?= $kategori_buku['jumlah_buku'] ?></td>
                           <td>
-                            <a class="btn btn-primary btn-action mr-1 ubah-kategori" title="Edit" data-toggle="modal" data-target="#modal-ubah-kategori" data-id="<?= $kategori_buku['id_kategori']; ?>" data-nama="<?= $kategori_buku['nama_kategori'] ?>" data-keterangan="<?= $kategori_buku['ket_kategori']; ?>"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn btn-danger btn-action hapus-kategori" title="Delete" data-toggle="modal" data-target="#modal-hapus-kategori" data-id="<?= $kategori_buku['id_kategori']; ?>" data-nama="<?= $kategori_buku['nama_kategori'] ?>" data-keterangan="<?= $kategori_buku['ket_kategori']; ?>"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-primary btn-action mr-1 ubah-kategori" title="Edit" data-toggle="modal" data-target="#modal-ubah-kategori" data-id="<?= $kategori_buku['id_kategori']; ?>" data-nama="<?= $kategori_buku['nama_kategori'] ?>" data-keterangan="<?= $kategori_buku['deskripsi_kategori']; ?>"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-danger btn-action hapus-kategori" title="Delete" data-toggle="modal" data-target="#modal-hapus-kategori" data-id="<?= $kategori_buku['id_kategori']; ?>" data-nama="<?= $kategori_buku['nama_kategori'] ?>" data-keterangan="<?= $kategori_buku['deskripsi_kategori']; ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>

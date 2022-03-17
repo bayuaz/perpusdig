@@ -47,7 +47,7 @@ class Login extends CI_Controller {
 
 				if (!empty($cek)) {
 					$params = [
-						'id_pengguna' => $cek['id_pengguna'],
+						'nis_nip_pengguna' => $cek['nis_nip_pengguna'],
 						'status_logs' => 'login',
 						'create_by' => $cek['id_pengguna'],
 						'create_name' => $cek['nama_pengguna'],
@@ -57,8 +57,8 @@ class Login extends CI_Controller {
 					if ($this->M_login->insert_tbl_logs($params)) {
 						$session = array(
 							'id' => $cek['id_pengguna'],
+							'nis_nip' => $cek['nis_nip_pengguna'],
 		                    'nama' => $cek['nama_pengguna'],
-		                    'nis_nip' => $cek['nis_nip_pengguna'],
 		                    'level' => $cek['id_level'],
 		                    'status' => 'login'
 		                );

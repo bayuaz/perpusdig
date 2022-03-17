@@ -94,7 +94,9 @@
                               if ($pinjam['status_peminjaman'] == 'diajukan') : 
                                 if (empty($pinjam['tgl_dikembalikan'])) : ?>
                                   <div class="badge badge-warning">Menunggu</div>
-                                <?php else : ?>
+                                <?php elseif (!empty($pinjam['tgl_dikembalikan']) && empty($pinjam['nobuku_peminjaman'])) : ?>
+                                  <div class="badge badge-warning">Menunggu</div>
+                                <?php elseif (!empty($pinjam['tgl_dikembalikan']) && !empty($pinjam['nobuku_peminjaman'])) : ?>
                                   <div class="badge badge-danger">Menunggu</div>
                                 <?php endif; ?>
                               <?php elseif ($pinjam['status_peminjaman'] == 'ditolak') : ?>
@@ -118,11 +120,11 @@
                             <?php else : ?>
                             <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
                             <?php endif;
-                            elseif ($pinjam['status_peminjaman'] == 'diajukan') : ?>
-                            <a class="btn btn-info btn-action mr-1 info-peminjaman" title="Info Peminjaman" data-toggle="modal" data-target="#modal-info-peminjaman" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-denda="<?= $pinjam['status_peminjaman'] == 'dikembalikan' || !empty($pinjam['tgl_dikembalikan']) ? rupiah($pinjam['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>"><i class="fas fa-info-circle"></i></a>
+                            elseif ($pinjam['status_peminjaman'] == 'diajukan' || ($pinjam['status_peminjaman'] == 'ditolak') && empty($pinjam['tgl_dikembalikan'])) : ?>
+                            <a class="btn btn-info btn-action mr-1 info-peminjaman" title="Info Peminjaman" data-toggle="modal" data-target="#modal-info-peminjaman" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-no="<?= $pinjam['nobuku_peminjaman']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? '' : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-status="<?= $pinjam['status_peminjaman'] ?>" data-denda="<?= $pinjam['status_peminjaman'] == 'dikembalikan' || !empty($pinjam['tgl_dikembalikan']) ? rupiah($pinjam['denda_peminjaman']) : ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) ?>"><i class="fas fa-info-circle"></i></a>
                             <?php endif; ?>
-                            <?php if ($pinjam['status_peminjaman'] != 'diajukan') : ?>
-                            <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? hariIndo(date('l')) . ', ' . tglIndo(date('Y-m-d')) : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-status="<?= $pinjam['status_peminjaman'] ?>" data-denda="<?= empty($pinjam['denda_peminjaman']) ? ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) : rupiah($pinjam['denda_peminjaman']) ?>"><i class="fas fa-book-dead"></i></a>
+                            <?php if (($pinjam['status_peminjaman'] == 'ditolak' && !empty($pinjam['tgl_dikembalikan'])) || ($pinjam['status_peminjaman'] == 'dipinjam' && empty($pinjam['tgl_dikembalikan']))) : ?>
+                            <a class="btn btn-danger btn-action kembalikan-buku" title="Pulangin Buku" data-toggle="modal" data-target="#modal-kembalikan-buku" data-id="<?= $pinjam['id_buku']; ?>" data-judul="<?= $pinjam['judul_buku']; ?>" data-no="<?= $pinjam['nobuku_peminjaman']; ?>" data-nama="<?= $this->session->userdata('nama'); ?>" data-tgl-pinjam="<?= hariIndo(date('l', strtotime($pinjam['tgl_peminjaman']))) . ', ' . tglIndo($pinjam['tgl_peminjaman']) ?>" data-tgl-kembali="<?= hariIndo(date('l', strtotime($pinjam['tgl_pengembalian']))) . ', ' . tglIndo($pinjam['tgl_pengembalian']) ?>" data-tgl-dikembalikan="<?= empty($pinjam['tgl_dikembalikan']) ? hariIndo(date('l')) . ', ' . tglIndo(date('Y-m-d')) : hariIndo(date('l', strtotime($pinjam['tgl_dikembalikan']))) . ', ' . tglIndo(date($pinjam['tgl_dikembalikan'])) ?>" data-status="<?= $pinjam['status_peminjaman'] ?>" data-denda="<?= empty($pinjam['denda_peminjaman']) ? ($diff->invert > 0 ? rupiah($denda) : rupiah(0)) : rupiah($pinjam['denda_peminjaman']) ?>"><i class="fas fa-book-dead"></i></a>
                             <?php endif; ?>
                           </td>
                         </tr>
@@ -156,6 +158,10 @@
                     <label class="col-sm-3 col-form-label">Judul</label>
                     <div class="col-sm-9">
                       <p id="kembalikan-buku-judul"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Nomor</label>
+                    <div class="col-sm-9">
+                      <p id="kembalikan-buku-no"></p>
                     </div>
                     <label class="col-sm-3 col-form-label">Pinjam</label>
                     <div class="col-sm-9">
@@ -211,48 +217,57 @@
         </div>
         <!-- End modal baca buku -->
         <!-- Start modal kembalikan buku -->
-        <div class="modal fade" tabindex="-1" role="dialog" id="modal-info-peminjaman">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Info Peminjaman</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="form-group row mb-0">
-                  <label class="col-sm-3 col-form-label">Nama</label>
-                  <div class="col-sm-9">
-                    <p id="info-peminjaman-nama"></p>
-                  </div>
-                  <label class="col-sm-3 col-form-label">Judul</label>
-                  <div class="col-sm-9">
-                    <p id="info-peminjaman-judul"></p>
-                  </div>
-                  <label class="col-sm-3 col-form-label">Pinjam</label>
-                  <div class="col-sm-9">
-                    <p id="info-peminjaman-tgl-pinjam"></p>
-                  </div>
-                  <label class="col-sm-3 col-form-label">Kembali</label>
-                  <div class="col-sm-9">
-                    <p id="info-peminjaman-tgl-kembali"></p>
-                  </div>
-                  <label class="col-sm-3 col-form-label" id="info-label-dikembalikan">Dikembalikan</label>
-                  <div class="col-sm-9">
-                    <p id="info-peminjaman-tgl-dikembalikan"></p>
-                  </div>
-                  <label class="col-sm-3 col-form-label" id="info-label-denda">Denda</label>
-                  <div class="col-sm-9">
-                    <p class="font-weight-bold" id="info-peminjaman-denda"></p>
+        <?php $attributes = ['class' => 'needs-validation was-validated', 'novalidate' => ''] ?>
+        <?= form_open('pengguna/pinjam_buku_kembali_proses', $attributes) ?>
+          <div class="modal fade" tabindex="-1" role="dialog" id="modal-info-peminjaman">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Info Peminjaman</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" name="id" id="pinjam-buku-id" value="<?= set_value('id') ?>">
+                  <div class="form-group row mb-0">
+                    <label class="col-sm-3 col-form-label">Nama</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-nama"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Judul</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-judul"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Nomor</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-no"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Pinjam</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-tgl-pinjam"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Kembali</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-tgl-kembali"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label" id="info-label-dikembalikan">Dikembalikan</label>
+                    <div class="col-sm-9">
+                      <p id="info-peminjaman-tgl-dikembalikan"></p>
+                    </div>
+                    <label class="col-sm-3 col-form-label" id="info-label-denda">Denda</label>
+                    <div class="col-sm-9">
+                      <p class="font-weight-bold" id="info-peminjaman-denda"></p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="modal-footer bg-whitesmoke br">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="modal-footer bg-whitesmoke br">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="konfirmasi-pinjam">Pinjam Kembali</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        <?= form_close(); ?>
         <!-- End modal kembalikan buku -->
       </div>

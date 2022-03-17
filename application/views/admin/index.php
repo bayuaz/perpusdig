@@ -107,6 +107,34 @@
             </div>
           </div>
           <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+              <div class="card card-danger">
+                <div class="card-header">
+                  <h4 class="text-danger">Paling Sering Dipinjam</h4>
+                  <div class="card-header-action">
+                   <div class="badge badge-danger"><i class="fas fa-fire"></i></div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <canvas id="seringDipinjam"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <div class="card card-danger">
+                <div class="card-header">
+                  <h4 class="text-danger">Paling Sering Login</h4>
+                  <div class="card-header-action">
+                   <div class="badge badge-danger"><i class="fas fa-fire"></i></div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <canvas id="topLogin"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-lg-8 col-md-12 col-12 col-sm-12">
               <div class="card card-primary">
                 <div class="card-header">
@@ -130,29 +158,42 @@
                         <td><?= $peminjaman['judul_buku'] ?></td>
                         <td class="font-weight-600"><?= $peminjaman['nama_pengguna'] ?></td>
                         <td>
-                        <?php 
-                        $waktu_pengembalian  = date_create($peminjaman['tgl_pengembalian']); // waktu pengembalian
-                        $waktu_sekarang = date_create(); // waktu sekarang
-                        $diff  = date_diff($waktu_sekarang, $waktu_pengembalian);
+                          <?php
 
-                        if ($diff->invert > 0) {
-                          if ($peminjaman['tgl_pengembalian'] == date('Y-m-d')) {
-                            echo '<div class="badge badge-info">Dipinjam</div>';
-                          } else {
-                            if ($peminjaman['status_peminjaman'] == 'dipinjam') {
-                              echo '<div class="badge badge-danger">Telat ' . $diff->d . ' hari</div>';
-                            } else {
-                              echo '<div class="badge badge-success">Dikembalikan</div>';
-                            }
-                          }
-                        } else {
-                          if ($peminjaman['status_peminjaman'] == 'dipinjam') {
-                            echo '<div class="badge badge-info">Dipinjam</div>';
-                          } else {
-                            echo '<div class="badge badge-success">Dikembalikan</div>';
-                          }
-                        }
-                        ?>
+                          $waktu_dikembalikan  = empty($peminjaman['tgl_dikembalikan']) ? date_create($peminjaman['tgl_pengembalian']) : date_create($peminjaman['tgl_dikembalikan']); // waktu dikembalikan
+                          $waktu_pengembalian = date_create($peminjaman['tgl_pengembalian']); // waktu pengembalian seharusnya
+                          $diff  = date_diff($waktu_dikembalikan, $waktu_pengembalian);
+
+                          if ($diff->invert > 0) :
+                            // set denda
+                            $hari = $diff->d;
+                            $nominal = 3000;
+                            $denda = $hari * $nominal;
+
+                            if ($peminjaman['status_peminjaman'] == 'dipinjam') : ?>
+                                <div class="badge badge-danger">Telat <?= $diff->d ?> hari</div>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'diajukan') : ?>
+                              <div class="badge badge-danger">Menunggu</div>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'ditolak') : ?>
+                              <div class="badge badge-danger">Ditolak</div>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'dikembalikan') : ?>
+                              <div class="badge badge-success">Dikembalikan</div>
+                            <?php endif;
+                          else :
+                            if ($peminjaman['status_peminjaman'] == 'diajukan') : 
+                              if (empty($peminjaman['tgl_dikembalikan'])) : ?>
+                                <div class="badge badge-warning">Menunggu</div>
+                              <?php else : ?>
+                                <div class="badge badge-danger">Menunggu</div>
+                              <?php endif; ?>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'ditolak') : ?>
+                              <div class="badge badge-danger">Ditolak</div>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'dipinjam') : ?>
+                              <div class="badge badge-info">Dipinjam</div>
+                            <?php elseif ($peminjaman['status_peminjaman'] == 'dikembalikan') : ?>
+                              <div class="badge badge-success">Dikembalikan</div>
+                            <?php endif;
+                          endif; ?>
                         </td>
                         <td><?= tglIndo($peminjaman['tgl_pengembalian']) ?></td>
                       </tr>

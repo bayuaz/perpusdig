@@ -63,6 +63,7 @@
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
+                          <th>Kode</th>
                           <th>Nama</th>
                           <th>Keterangan</th>
                           <th>Jumlah Pengguna</th>
@@ -73,12 +74,13 @@
                         <?php foreach ($data_level_user as $key => $level_user) : ?>
                         <tr>
                           <td><?= $key+1; ?></td>
+                          <td><?= $level_user['id_level'] ?></td>
                           <td><?= $level_user['nama_level'] ?></td>
-                          <td><?= $level_user['ket_level'] ?></td>
+                          <td><?= $level_user['deskripsi_level'] ?></td>
                           <td><?= $level_user['jumlah_pengguna'] ?></td>
                           <td>
-                            <a class="btn btn-primary btn-action mr-1 ubah-level" title="Edit" data-toggle="modal" data-target="#modal-ubah-level" data-id="<?= $level_user['id_level']; ?>" data-nama="<?= $level_user['nama_level'] ?>" data-keterangan="<?= $level_user['ket_level'] ?>"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn btn-danger btn-action hapus-level" title="Delete" data-toggle="modal" data-target="#modal-hapus-level" data-id="<?= $level_user['id_level']; ?>" data-nama="<?= $level_user['nama_level'] ?>" data-keterangan="<?= $level_user['ket_level'] ?>"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-primary btn-action mr-1 ubah-level" title="Edit" data-toggle="modal" data-target="#modal-ubah-level" data-id="<?= $level_user['id_level']; ?>" data-nama="<?= $level_user['nama_level'] ?>" data-keterangan="<?= $level_user['deskripsi_level'] ?>"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn btn-danger btn-action hapus-level" title="Delete" data-toggle="modal" data-target="#modal-hapus-level" data-id="<?= $level_user['id_level']; ?>" data-nama="<?= $level_user['nama_level'] ?>" data-keterangan="<?= $level_user['deskripsi_level'] ?>"><i class="fas fa-trash"></i></a>
                           </td>
                         </tr>
                         <?php endforeach ?>

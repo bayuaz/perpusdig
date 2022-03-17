@@ -1,11 +1,11 @@
 "use strict";
 
 $(document).ready(function() {
-	var judul_pinjam, judul_kembali;
+	var judul_pinjam, judul_kembali, tgl_dikembalikan, no_buku_info;
 
 	$("#table-buku").dataTable({
 	  "columnDefs": [
-	    { "sortable": false, "targets": [4, 5] }
+	    { "sortable": false, "targets": [5, 6] }
 	  ]
 	});
 
@@ -15,6 +15,37 @@ $(document).ready(function() {
 		$('#pinjam-buku-nama').text($(this).data('nama')).change();
 		$('#pinjam-buku-judul').text(judul_pinjam).change();
 	});
+
+	$('.info-peminjaman').click(function() {
+		tgl_dikembalikan = $(this).data('tgl-dikembalikan');
+		no_buku_info = $(this).data('no');
+
+		$('#info-peminjaman-nama').text($(this).data('nama')).change();
+		$('#info-peminjaman-judul').text($(this).data('judul')).change();
+		$('#info-peminjaman-no').text(no_buku_info).change();
+		$('#info-peminjaman-tgl-pinjam').text($(this).data('tgl-pinjam')).change();
+		$('#info-peminjaman-tgl-kembali').text($(this).data('tgl-kembali')).change();
+		$('#info-peminjaman-tgl-dikembalikan').text(tgl_dikembalikan).change();
+		$('#info-peminjaman-denda').text($(this).data('denda')).change();
+
+		if (tgl_dikembalikan == '') {
+			$('#info-label-dikembalikan').hide();
+			$('#info-peminjaman-tgl-dikembalikan').hide();
+			$('#info-label-denda').hide();
+			$('#info-peminjaman-denda').hide();
+		} else {
+			$('#info-label-dikembalikan').show();
+			$('#info-peminjaman-tgl-dikembalikan').show();
+			$('#info-label-denda').show();
+			$('#info-peminjaman-denda').show();
+		}
+
+		if (no_buku_info == '') {
+			$('#info-peminjaman-no').text('Nomor buku masih kosong.').addClass('text-danger').change();
+		} else {
+			$('#info-peminjaman-no').text(no_buku_info).change();
+		}
+	})
 
 	$('.kembalikan-buku').click(function() {
 		judul_kembali = $(this).data('judul');

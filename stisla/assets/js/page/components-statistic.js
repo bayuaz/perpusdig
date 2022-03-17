@@ -158,10 +158,10 @@ var ctx = document.getElementById("myChart3").getContext('2d');
 var myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
     datasets: [{
       label: 'Google',
-      data: [290, 358, 220, 402, 690, 510, 688],
+      data: [290, 358, 220, 402, 690],
       borderWidth: 2,
       backgroundColor: 'transparent',
       borderColor: 'rgba(254,86,83,.7)',
@@ -172,7 +172,7 @@ var myChart = new Chart(ctx, {
     },
     {
       label: 'Facebook',
-      data: [450, 258, 390, 162, 440, 570, 438],
+      data: [450, 258, 390, 162, 440],
       borderWidth: 2,
       backgroundColor: 'transparent',
       borderColor: 'rgba(63,82,227,.8)',

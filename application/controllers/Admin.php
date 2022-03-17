@@ -1,5 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
 class Admin extends CI_Controller {
 	function __construct(){
@@ -14,6 +20,9 @@ class Admin extends CI_Controller {
 	}
 
 	public function index() {
+		//judul
+		$data['title'] = 'Sistem Informasi Perpustakaan - SMPN 2 Limapuluh';
+
 		// get total data
 		$data['total_user'] = $this->M_admin->get_total_user();
 		$data['total_buku_fisik'] = $this->M_admin->get_total_buku_fisik();
@@ -26,12 +35,18 @@ class Admin extends CI_Controller {
 		$data['data_logs'] = $this->M_admin->get_data_logs();
 		$data['data_sering_dipinjam'] = $this->M_admin->get_data_sering_dipinjam();
 		$data['data_kategori'] = $this->M_admin->get_data_kategori();
+		$data['data_sering_login'] = $this->M_admin->get_data_sering_login();
+
+		// print_r($data['data_buku_sering_dipinjam']);die;
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
-		$data['detail_logs_user'] = $this->M_admin->get_detail_logs_user(array($this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
+		$data['detail_logs_user'] = $this->M_admin->get_detail_logs_user(array($this->session->userdata('nis_nip')));
 
-		$this->vic_lib->aview('index', $data);
+		$this->load->view('admin/menu/header', $data);
+		$this->load->view('admin/menu/sidebar', $data);
+		$this->load->view('admin/index', $data);
+		$this->load->view('admin/menu/footer', $data);
 	}
 
 	public function buku() {
@@ -40,16 +55,107 @@ class Admin extends CI_Controller {
 		$data['data_kategori'] = $this->M_admin->get_data_kategori();
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_buku', $data);
 	}
 
+	public function import_buku_proses() {
+		// file type
+        $file_mimes = [
+            'text/x-comma-separated-values',
+            'text/comma-separated-values',
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'text/plain',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        if (isset($_FILES['file_excel']['name']) && in_array($_FILES['file_excel']['type'], $file_mimes)) {
+
+            $arr_file = explode('.', $_FILES['file_excel']['name']); // get file
+            $extension = end($arr_file); // get file extension
+
+            // select spreadsheet reader depends on file extension
+            if ($extension == 'csv') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            } else if ($extension == 'xlsx'){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            } else if ($extension == 'xls') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+            } else {
+                $this->session->set_userdata('failed', 'Ekstensi file tidak dikenali!');
+                redirect('admin/buku');
+            }
+
+            // 'Data' Table
+            $dataList = [];
+            $dataListArray = [];
+
+            $reader->setReadDataOnly(true);
+
+            //Get filename
+            $objPHPExcel = $reader->load($_FILES['file_excel']['tmp_name']);
+            
+            //Get sheet by name
+            $worksheet = $objPHPExcel->getSheetByName('Buku');
+
+            /*
+            * Get sheet by index
+            * Get the second sheet in the workbook
+            * Note that sheets are indexed from 0
+            */ 
+            // $spreadsheet->getSheet(1);
+
+            /*
+            * Get current active sheet
+            */ 
+
+            //$spreadsheet->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow(); // e.g. 12
+            $highestColumn = $worksheet->getHighestColumn(); // e.g M'
+
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 7
+            //Ignoring first row (As it contains column name)
+            for ($row = 8; $row <= $highestRow; ++$row) {
+                //A row selected
+                for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                    // values till $cityList['1'] till $cityList['last_column_no'] 
+                    $dataList[$col] = $worksheet->getCellByColumnAndRow($col, $row)->getValue(); 
+                } 
+
+                array_push($dataListArray, $dataList);
+                //next row, from top
+            }
+
+            // print_r($dataListArray);
+            
+            if ($this->M_admin->import_buku($dataListArray) == TRUE) {
+                // what to do if import successfull
+                $this->session->set_userdata('success', 'Import data buku berhasil!');
+                redirect('admin/buku');
+			} else {
+                // what to do if import failed
+				$this->session->set_userdata('failed', 'Import data buku gagal!');
+                redirect('admin/buku');
+			}
+        } else {
+			$this->session->set_userdata('failed', 'Import data buku gagal!');
+            redirect('admin/buku');
+        }
+	}
+
 	public function tambah_buku_proses() {
+		$this->form_validation->set_rules('kode','Kode Buku', 'trim|required');
 		$this->form_validation->set_rules('kategori','Kategori Buku', 'trim|required');
 		$this->form_validation->set_rules('bentuk','Bentuk Buku', 'trim|required');
 		$this->form_validation->set_rules('judul','Judul Buku', 'trim|required');
-		$this->form_validation->set_rules('kode','Kode Buku', 'trim|required');
 		$this->form_validation->set_rules('pengarang','Pengarang Buku', 'trim|required');
 		$this->form_validation->set_rules('penerbit','Penerbit Buku', 'trim|required');
 		$this->form_validation->set_rules('tahun_terbit','Tahun Terbit Buku', 'trim|required');
@@ -110,15 +216,15 @@ class Admin extends CI_Controller {
             	} else {
             		$params = [
 						'id_kategori' => $this->input->post('kategori'),
+						'kode_buku' => $this->input->post('kode'),
 						'bentuk_buku' => $this->input->post('bentuk'),
 						'judul_buku' => $this->input->post('judul'),
-						'kode_buku' => $this->input->post('kode'),
 						'pengarang_buku' => $this->input->post('pengarang'),
 						'penerbit_buku' => $this->input->post('penerbit'),
 						'tahun_terbit_buku' => $this->input->post('tahun_terbit'),
 						'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
 						'cover_buku' => $data_cover['file_name'],
-						'create_by' => $this->session->userdata('id'),
+						'create_by' => $this->session->userdata('nis_nip'),
 						'create_name' => $this->session->userdata('nama'),
 						'create_date' => date('Y-m-d H:i:s'),
 					];
@@ -166,7 +272,7 @@ class Admin extends CI_Controller {
 				// upload config cover
 	            $config_cover['upload_path'] = 'assets/uploads/cover/';
 	            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
-	            $config_cover['max_size'] = '2000';
+	            $config_cover['max_size'] = '5000';
 	            // inisiasi config cover
 	            $this->upload->initialize($config_cover);
 	            // proses upload gambar
@@ -310,7 +416,7 @@ class Admin extends CI_Controller {
 					'jumlah_buku' => str_replace(',', '', $this->input->post('jumlah')),
 					'mdb' => $this->session->userdata('id'),
 					'mdb_name' => $this->session->userdata('nama'),
-					'mdd' => date('Y-m-d H:i:s'),
+					'mdd' => date('Y-m-d H:i:s')
 				];
 
 				$where = ['id_buku' => $this->input->post('id')];
@@ -365,7 +471,7 @@ class Admin extends CI_Controller {
 		$data['data_kategori_buku'] = $this->M_admin->get_data_kategori_buku();
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_kategori', $data);
 	}
@@ -383,7 +489,7 @@ class Admin extends CI_Controller {
 			];
 
 			if ($this->input->post('keterangan') != '<p></p>' || $this->input->post('keterangan') != '') {
-				$params['ket_kategori'] = $this->input->post('keterangan');
+				$params['deskripsi_kategori'] = $this->input->post('keterangan');
 			}
 
 			if ($this->M_admin->insert_tbl_kategori($params)) {
@@ -423,7 +529,7 @@ class Admin extends CI_Controller {
 			];
 
 			if ($this->input->post('keterangan') != '<p></p>' || $this->input->post('keterangan') != '') {
-				$params['ket_kategori'] = $this->input->post('keterangan');
+				$params['deskripsi_kategori'] = $this->input->post('keterangan');
 			}
 
 			$where = ['id_kategori' => $this->input->post('id')];
@@ -475,30 +581,187 @@ class Admin extends CI_Controller {
 		$data['data_peminjaman'] = $this->M_admin->get_data_peminjaman();
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_peminjaman', $data);
 	}
 
+	public function tambah_peminjaman() {
+		// get detail data
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
+
+		$this->vic_lib->aview('tambah_peminjaman', $data);
+	}
+
+	public function tambah_peminjaman_proses() {
+		$this->form_validation->set_rules('nis_nip','NIS/NIP Pengguna', 'trim|required');
+		$this->form_validation->set_rules('kode','Kode Buku', 'trim|required');
+		$this->form_validation->set_rules('no','Nomor Buku', 'trim|required');
+
+		// get input
+		$nis_nip = $this->input->post('nis_nip');
+		if (empty($this->M_admin->cek_nis_nip($nis_nip))) {
+            $this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+			redirect('admin/peminjaman');
+        }
+
+		$kode_buku = $this->input->post('kode');
+        if (empty($this->M_admin->cek_kode_buku($kode_buku))) {
+            $this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+			redirect('admin/peminjaman');
+        }
+
+        $no_buku = $this->input->post('no');
+
+    	// cek pinjam buku
+        if (!empty($this->M_admin->cek_pinjam_buku([$nis_nip, $kode_buku, $no_buku]))) {
+            $this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+			redirect('admin/peminjaman');
+        }
+
+		if ($this->form_validation->run() !== false) {
+			$params = [
+                'nis_nip_pengguna' => $nis_nip,
+                'kode_buku' => $kode_buku,
+                'nobuku_peminjaman' => $no_buku,
+                'tgl_peminjaman' => date('Y-m-d'),
+                'tgl_pengembalian' => date('Y-m-d', strtotime('+3 days')),
+                'status_peminjaman' => 'dipinjam',
+                'create_by' => $this->session->userdata('id'),
+                'create_name' => $this->session->userdata('nama'),
+                'create_date' => date('Y-m-d H:i:s')
+            ];
+
+			if ($this->M_admin->insert_tbl_peminjaman($params)) {
+				$this->session->set_userdata('success', 'Tambah data peminjaman berhasil!');
+				redirect('admin/peminjaman');
+			} else {
+				$this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+				$this->peminjaman();
+			}
+		} else {
+			$this->session->set_userdata('failed', 'Tambah data peminjaman gagal!');
+			$this->peminjaman();
+		}
+	}
+
+	public function import_peminjaman_proses() {
+		// file type
+        $file_mimes = [
+            'text/x-comma-separated-values',
+            'text/comma-separated-values',
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'text/plain',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        if (isset($_FILES['file_excel']['name']) && in_array($_FILES['file_excel']['type'], $file_mimes)) {
+
+            $arr_file = explode('.', $_FILES['file_excel']['name']); // get file
+            $extension = end($arr_file); // get file extension
+
+            // select spreadsheet reader depends on file extension
+            if ($extension == 'csv') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            } else if ($extension == 'xlsx'){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            } else if ($extension == 'xls') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+            } else {
+                $this->session->set_userdata('failed', 'Ekstensi file tidak dikenali!');
+                redirect('admin/peminjaman/tambah');
+            }
+
+            // 'Data' Table
+            $dataList = [];
+            $dataListArray = [];
+
+            $reader->setReadDataOnly(true);
+
+            //Get filename
+            $objPHPExcel = $reader->load($_FILES['file_excel']['tmp_name']);
+            
+            //Get sheet by name
+            $worksheet = $objPHPExcel->getSheetByName('Peminjaman');
+
+            /*
+            * Get sheet by index
+            * Get the second sheet in the workbook
+            * Note that sheets are indexed from 0
+            */ 
+            // $spreadsheet->getSheet(1);
+
+            /*
+            * Get current active sheet
+            */ 
+
+            //$spreadsheet->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow(); // e.g. 12
+            $highestColumn = $worksheet->getHighestColumn(); // e.g M'
+
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 7
+            //Ignoring first row (As it contains column name)
+            for ($row = 3; $row <= $highestRow; ++$row) {
+                //A row selected
+                for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                    // values till $cityList['1'] till $cityList['last_column_no'] 
+                    $dataList[$col] = $worksheet->getCellByColumnAndRow($col, $row)->getValue(); 
+                } 
+
+                array_push($dataListArray, $dataList);
+                //next row, from top
+            }
+            
+            if ($this->M_admin->import_peminjaman($dataListArray) == TRUE) {
+                // what to do if import successfull
+                $this->session->set_userdata('success', 'Import data peminjaman berhasil!');
+                redirect('admin/peminjaman');
+			} else {
+                // what to do if import failed
+				$this->session->set_userdata('failed', 'Import data peminjaman gagal!');
+                redirect('admin/peminjaman/tambah');
+			}
+        } else {
+			$this->session->set_userdata('failed', 'Import data peminjaman gagal!');
+            redirect('admin/peminjaman/tambah');
+        }
+	}
+
 	public function pinjam_buku_proses() {
-		$this->form_validation->set_rules('id_pengguna', 'ID Pengguna', 'trim|required');
-		$this->form_validation->set_rules('id_buku', 'ID Buku', 'trim|required');
+		$this->form_validation->set_rules('nis_nip', 'NIS/NIP Pengguna', 'trim|required');
+		$this->form_validation->set_rules('id', 'ID Buku', 'trim|required');
+		$this->form_validation->set_rules('kode', 'Kode Buku', 'trim|required');
 		$this->form_validation->set_rules('action', 'Action Proses', 'trim|required');
 
 		// get data
 		$action = $this->input->post('action');
-		$id_pengguna = $this->input->post('id_pengguna');
-		$id_buku = $this->input->post('id_buku');
-		$params_id = [$id_pengguna, $id_buku];
+		$nis_nip_pengguna = $this->input->post('nis_nip');
+		$id_buku = $this->input->post('id');
+		$kode_buku = $this->input->post('kode');
 		$detail_buku = $this->M_admin->get_detail_buku($id_buku);
-		$id_peminjaman = $this->M_admin->get_id_peminjaman($params_id);
-		$detail_peminjaman = $this->M_admin->get_detail_peminjaman($id_peminjaman);
 
 		// cek data
 		if (empty($detail_buku)) {
 			$this->session->set_userdata('failed', 'Proses peminjaman gagal!');
 			$this->peminjaman();
 		}
+
+		$id_peminjaman = $this->M_admin->get_id_peminjaman([$nis_nip_pengguna, $kode_buku]);
+
+		// cek id peminjaman
+		if (empty($id_peminjaman)) {
+			$this->session->set_userdata('failed', 'Transaksi peminjaman tidak ada!');
+			$this->peminjaman();
+		}
+
+		$detail_peminjaman = $this->M_admin->get_detail_peminjaman($id_peminjaman);
 
 		if ($this->form_validation->run() !== false) {
 			$params = [
@@ -539,9 +802,98 @@ class Admin extends CI_Controller {
 		$data['data_level'] = $this->M_admin->get_data_level();
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_user', $data);
+	}
+
+	public function import_pengguna_proses() {
+		// file type
+        $file_mimes = [
+            'text/x-comma-separated-values',
+            'text/comma-separated-values',
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'text/plain',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        if (isset($_FILES['file_excel']['name']) && in_array($_FILES['file_excel']['type'], $file_mimes)) {
+
+            $arr_file = explode('.', $_FILES['file_excel']['name']); // get file
+            $extension = end($arr_file); // get file extension
+
+            // select spreadsheet reader depends on file extension
+            if ($extension == 'csv') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            } else if ($extension == 'xlsx'){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            } else if ($extension == 'xls') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+            } else {
+                $this->session->set_userdata('failed', 'Ekstensi file tidak dikenali!');
+                redirect('admin/pengguna');
+            }
+
+            // 'Data' Table
+            $dataList = [];
+            $dataListArray = [];
+
+            $reader->setReadDataOnly(true);
+
+            //Get filename
+            $objPHPExcel = $reader->load($_FILES['file_excel']['tmp_name']);
+            
+            //Get sheet by name
+            $worksheet = $objPHPExcel->getSheetByName('Pengguna');
+
+            /*
+            * Get sheet by index
+            * Get the second sheet in the workbook
+            * Note that sheets are indexed from 0
+            */ 
+            // $spreadsheet->getSheet(1);
+
+            /*
+            * Get current active sheet
+            */ 
+
+            //$spreadsheet->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow(); // e.g. 12
+            $highestColumn = $worksheet->getHighestColumn(); // e.g M'
+
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 7
+            //Ignoring first row (As it contains column name)
+            for ($row = 9; $row <= $highestRow; ++$row) {
+                //A row selected
+                for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                    // values till $cityList['1'] till $cityList['last_column_no'] 
+                    $dataList[$col] = $worksheet->getCellByColumnAndRow($col, $row)->getValue(); 
+                }
+                
+                array_push($dataListArray, $dataList);
+                //next row, from top
+            }
+            
+            if ($this->M_admin->import_pengguna($dataListArray) == TRUE) {
+                // what to do if import successfull
+                $this->session->set_userdata('success', 'Import data pengguna berhasil!');
+                redirect('admin/pengguna');
+			} else {
+                // what to do if import failed
+				$this->session->set_userdata('failed', 'Import data pengguna gagal!');
+                redirect('admin/pengguna');
+			}
+        } else {
+			$this->session->set_userdata('failed', 'Import data pengguna gagal!');
+            redirect('admin/pengguna');
+        }
 	}
 
 	public function tambah_pengguna_proses() {
@@ -675,7 +1027,7 @@ class Admin extends CI_Controller {
 		$data['data_level_user'] = $this->M_admin->get_data_level_user();
 
 		// get detail data
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_level', $data);
 	}
@@ -693,7 +1045,7 @@ class Admin extends CI_Controller {
 			];
 
 			if ($this->input->post('keterangan') != '<p></p>' || $this->input->post('keterangan') != '') {
-				$params['ket_level'] = $this->input->post('keterangan');
+				$params['deskripsi_level'] = $this->input->post('keterangan');
 			}
 
 			if ($this->M_admin->insert_tbl_level($params)) {
@@ -733,7 +1085,7 @@ class Admin extends CI_Controller {
 			];
 
 			if ($this->input->post('keterangan') != '<p></p>' || $this->input->post('keterangan') != '') {
-				$params['ket_level'] = $this->input->post('keterangan');
+				$params['deskripsi_level'] = $this->input->post('keterangan');
 			}
 
 			$where = ['id_level' => $this->input->post('id')];
@@ -783,7 +1135,7 @@ class Admin extends CI_Controller {
 	public function profile() {
 		// get detail data
 		$data['detail_user'] = $this->M_admin->get_detail_user_profile(array($this->session->userdata('id')));
-		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('id'), $this->session->userdata('id')));
+		$data['detail_user_header'] = $this->M_admin->get_detail_user_header(array($this->session->userdata('nis_nip'), $this->session->userdata('nis_nip')));
 
 		$this->vic_lib->aview('index_profile', $data);
 	}
@@ -847,7 +1199,7 @@ class Admin extends CI_Controller {
 
 	public function logout() {
 		$params = [
-			'id_pengguna' => $this->session->userdata('id'),
+			'nis_nip_pengguna' => $this->session->userdata('nis_nip'),
 			'status_logs' => 'logout',
 			'create_by' => $this->session->userdata('id'),
 			'create_name' => $this->session->userdata('nama'),

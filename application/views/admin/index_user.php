@@ -54,7 +54,9 @@
                 <div class="card-header">
                   <h4 class="text-primary">Data Pengguna</h4>
                   <div class="card-header-action">
-                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambah-pengguna"><i class="fas fa-plus mr-2"></i>Tambah Data</a>
+                    <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#tambah-pengguna"><i class="fas fa-plus mr-2"></i>Tambah Data</a>
+                    <a href="<?= base_url('assets/template/import/pengguna.xlsx'); ?>" class="btn btn-info"><i class="fas fa-download mr-2"></i>Unduh Template</a>
+                    <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#import-pengguna"><i class="fas fa-upload mr-2"></i>Import Data</a>
                   </div>
                 </div>
                 <div class="card-body">
@@ -88,6 +90,8 @@
                             <div class="badge badge-warning">
                             <?php elseif ($user['id_level'] == '4') : ?>
                             <div class="badge badge-light">
+                            <?php elseif ($user['id_level'] == '6') : ?>
+                            <div class="badge badge-secondary">
                             <?php endif; ?>
                             <?= $user['nama_level'] ?>
                             </div>
@@ -452,4 +456,43 @@
           </div>
         <?= form_close(); ?>
         <!-- End modal hapus pengguna -->
+        <!-- Start modal import peminjaman -->
+        <?php $attributes = ['class' => 'needs-validation was-validated', 'novalidate' => ''] ?>
+        <?= form_open_multipart('admin/import_pengguna_proses', $attributes) ?>
+          <div class="modal fade" tabindex="-1" role="dialog" id="import-pengguna">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Import Data Pengguna</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="file_excel" class="form-control" required="">
+                      <?php if (form_error('file_excel')) : ?>
+                      <div class="invalid-feedback">
+                        File Excel wajib diisi! <span class="text-warning">*XLS, XLSX, CSV</span>
+                      </div>
+                      <?php else : ?>
+                      <div class="invalid-feedback">
+                        File Excel wajib diisi! <span class="text-warning">*XLS, XLSX, CSV</span>
+                      </div>
+                      <?php endif; ?>
+                      <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Unggah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?= form_close(); ?>
+        <!-- End modal import peminjaman -->
        </div> 

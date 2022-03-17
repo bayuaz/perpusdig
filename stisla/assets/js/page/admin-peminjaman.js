@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function() {
-	var info_tgl_dikembalikan, proses_tgl_dikembalikan;
+	var info_tgl_dikembalikan, proses_tgl_dikembalikan, info_nobuku_peminjaman, proses_nobuku_peminjaman;
 
 	$("#table-peminjaman").dataTable({
 	  "columnDefs": [
@@ -11,12 +11,15 @@ $(document).ready(function() {
 
 	$('.proses-peminjaman').click(function() {
 		proses_tgl_dikembalikan = $(this).data('tgl-dikembalikan');
+		proses_nobuku_peminjaman = $(this).data('no');
 		
 		$('#proses-pinjam-status').text($(this).data('status')).change()
-		$('#proses-pinjam-id-pengguna').val($(this).data('id-pengguna')).change();
+		$('#proses-pinjam-nis-nip-pengguna').val($(this).data('nis-nip-pengguna')).change();
 		$('#proses-pinjam-id-buku').val($(this).data('id-buku')).change();
+		$('#proses-pinjam-kode-buku').val($(this).data('kode-buku')).change();
 		$('#proses-pinjam-nama').text($(this).data('nama')).change();
 		$('#proses-pinjam-judul').text($(this).data('judul')).change();
+		$('#proses-pinjam-no').text($(this).data('no')).change();
 		$('#proses-pinjam-tgl-pinjam').text($(this).data('tgl-pinjam')).change();
 		$('#proses-pinjam-tgl-kembali').text($(this).data('tgl-kembali')).change();
 		$('#proses-pinjam-tgl-dikembalikan').text($(this).data('tgl-dikembalikan')).change();
@@ -33,13 +36,22 @@ $(document).ready(function() {
 			$('#proses-label-denda').show();
 			$('#proses-pinjam-denda').show();
 		}
+
+		if (proses_nobuku_peminjaman == '') {
+			$('#proses-pinjam-no').text('Nomor buku masih kosong. Silahkan isi terlebih dahulu!').addClass('text-danger').change();
+		} else {
+			$('#proses-pinjam-no').text($(this).data('no')).change();
+			$('#tutup-modal').hide();
+		}
 	});
 
 	$('.info-peminjaman').click(function() {
 		info_tgl_dikembalikan = $(this).data('tgl-dikembalikan');
+		info_nobuku_peminjaman = $(this).data('no');
 
 		$('#info-peminjaman-nama').text($(this).data('nama')).change();
 		$('#info-peminjaman-judul').text($(this).data('judul')).change();
+		$('#info-peminjaman-no').text($(this).data('no')).change();
 		$('#info-peminjaman-tgl-pinjam').text($(this).data('tgl-pinjam')).change();
 		$('#info-peminjaman-tgl-kembali').text($(this).data('tgl-kembali')).change();
 		$('#info-peminjaman-tgl-dikembalikan').text(info_tgl_dikembalikan).change();
@@ -56,5 +68,23 @@ $(document).ready(function() {
 			$('#info-label-denda').show();
 			$('#info-peminjaman-denda').show();
 		}
+
+		if (info_nobuku_peminjaman == '') {
+			$('#info-peminjaman-no').text('Nomor buku masih kosong. Silahkan isi terlebih dahulu!').addClass('text-danger').change();
+			$('#setujui-peminjaman').hide();
+		} else {
+			$('#info-peminjaman-no').text($(this).data('no')).change();
+		}
 	});
 });
+
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : evt.keyCode
+    if (charCode == 43) {
+    	return true
+    } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    } else {
+    	return true;
+    }
+}

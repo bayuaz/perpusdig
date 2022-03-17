@@ -54,7 +54,9 @@
                 <div class="card-header">
                   <h4 class="text-primary">Data Buku</h4>
                   <div class="card-header-action">
-                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambah-buku"><i class="fas fa-plus mr-2"></i>Tambah Data</a>
+                    <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#tambah-buku"><i class="fas fa-plus mr-2"></i>Tambah Data</a>
+                    <a href="<?= base_url('assets/template/import/buku.xlsx'); ?>" class="btn btn-info"><i class="fas fa-download mr-2"></i>Unduh Template</a>
+                    <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#import-buku"><i class="fas fa-upload mr-2"></i>Import Data</a>
                   </div>
                 </div>
                 <div class="card-body">
@@ -78,7 +80,7 @@
                           <td><?= $key+1; ?></td>
                           <td><?= $buku['judul_buku'] ?></td>
                           <td><?= $buku['nama_kategori'] ?></td>
-                          <td><?= $buku['bentuk_buku'] ?></td>
+                          <td><?= ucfirst($buku['bentuk_buku']) ?></td>
                           <td><?= $buku['jumlah_buku'] ?></td>
                           <td>
                             <?php if (!empty($buku['cover_buku'])) : ?>
@@ -150,8 +152,8 @@
                     <div class="col-sm-9">
                       <select name="bentuk" class="form-control select2 bentuk-buku" data-placeholder="Pilih" required="">
                         <option disabled selected value></option>
-                        <option value="Fisik">Fisik</option>
-                        <option value="Digital">Digital</option>
+                        <option value="fisik">Fisik</option>
+                        <option value="digital">Digital</option>
                       </select>
                       <?php if (form_error('bentuk')) : ?>
                       <div class="invalid-feedback">
@@ -333,8 +335,8 @@
                     <label class="col-sm-3 col-form-label">Bentuk</label>
                     <div class="col-sm-9">
                       <select name="bentuk" class="form-control select2 bentuk-buku-ubah" data-placeholder="Pilih" id="ubah-bentuk" required="">
-                        <option value="Fisik">Fisik</option>
-                        <option value="Digital">Digital</option>
+                        <option value="fisik">Fisik</option>
+                        <option value="digital">Digital</option>
                       </select>
                       <?php if (form_error('bentuk')) : ?>
                       <div class="invalid-feedback">
@@ -496,8 +498,8 @@
                     <label class="col-sm-3 col-form-label">Bentuk</label>
                     <div class="col-sm-9">
                       <select name="bentuk" class="form-control select2 bentuk-buku-ubah" id="hapus-bentuk" data-placeholder="Pilih" disabled="">
-                        <option value="Fisik">Fisik</option>
-                        <option value="Digital">Digital</option>
+                        <option value="fisik">Fisik</option>
+                        <option value="digital">Digital</option>
                       </select>
                     </div>
                   </div>
@@ -573,4 +575,43 @@
           </div>
         </div>
         <!-- End modal baca buku -->
+        <!-- Start modal import buku -->
+        <?php $attributes = ['class' => 'needs-validation was-validated', 'novalidate' => ''] ?>
+        <?= form_open_multipart('admin/import_buku_proses', $attributes) ?>
+          <div class="modal fade" tabindex="-1" role="dialog" id="import-buku">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Import Data Buku</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">File</label>
+                    <div class="col-sm-9">
+                      <input type="file" name="file_excel" class="form-control" required="">
+                      <?php if (form_error('file_excel')) : ?>
+                      <div class="invalid-feedback">
+                        File Excel wajib diisi! <span class="text-warning">*XLS, XLSX, CSV</span>
+                      </div>
+                      <?php else : ?>
+                      <div class="invalid-feedback">
+                        File Excel wajib diisi! <span class="text-warning">*XLS, XLSX, CSV</span>
+                      </div>
+                      <?php endif; ?>
+                      <div class="valid-feedback"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Unggah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?= form_close(); ?>
+        <!-- End modal import buku -->
       </div>
