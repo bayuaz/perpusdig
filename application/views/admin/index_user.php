@@ -55,7 +55,7 @@
                   <h4 class="text-primary">Data Pengguna</h4>
                   <div class="card-header-action">
                     <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#tambah-pengguna"><i class="fas fa-plus mr-2"></i>Tambah Data</a>
-                    <a href="<?= base_url('assets/template/import/pengguna.xlsx'); ?>" class="btn btn-info"><i class="fas fa-download mr-2"></i>Unduh Template</a>
+                    <a href="<?= base_url('stisla/assets/template/import/pengguna.xlsx'); ?>" class="btn btn-info"><i class="fas fa-download mr-2"></i>Unduh Template</a>
                     <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#import-pengguna"><i class="fas fa-upload mr-2"></i>Import Data</a>
                   </div>
                 </div>
