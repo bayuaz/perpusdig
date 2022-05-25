@@ -85,7 +85,7 @@
                           <td>
                             <?php if (!empty($buku['cover_buku'])) : ?>
                             <div class="gallery">
-                              <div class="gallery-item" data-image="<?= base_url('assets/uploads/cover/') . $buku['cover_buku'] ?>" data-title="<?= $buku['judul_buku'] ?>"></div>
+                              <div class="gallery-item" data-image="<?= base_url('stisla/assets/uploads/cover/') . $buku['cover_buku'] ?>" data-title="<?= $buku['judul_buku'] ?>"></div>
                             </div>
                             <?php else : ?>
                             <a class="btn btn-warning btn-action mr-1 cover-kosong" title="Cover belum ada"><i class="fas fa-times"></i></a>
@@ -93,7 +93,7 @@
                           </td>
                           <td>
                             <?php if (!empty($buku['file_buku'])) : ?>
-                            <a class="btn btn-info btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $buku['judul_buku'] ?>" data-file="<?= base_url('assets/uploads/files/'.$buku['file_buku']) ?>"><i class="fas fa-file"></i></a>
+                            <a class="btn btn-info btn-action mr-1 baca-buku" title="Baca Buku" data-toggle="modal" data-target="#modal-baca-buku" data-judul="<?= $buku['judul_buku'] ?>" data-file="<?= base_url('stisla/assets/uploads/files/'.$buku['file_buku']) ?>"><i class="fas fa-file"></i></a>
                             <?php else : ?>
                             <a class="btn btn-warning btn-action mr-1 file-kosong" title="File belum ada"><i class="fas fa-times"></i></a>
                             <?php endif ?>

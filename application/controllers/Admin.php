@@ -162,9 +162,13 @@ class Admin extends CI_Controller {
 		    $this->form_validation->set_rules('cover', 'Cover Buku', 'required');
 		}
 
+		// print_r($_POST);
+		// echo "<br>";
+		// print_r($_FILES);die;
+
 		if ($this->form_validation->run() !== false) {
 			// upload config cover
-            $config_cover['upload_path'] = 'assets/uploads/cover/';
+            $config_cover['upload_path'] = 'stisla/assets/uploads/cover/';
             $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
             $config_cover['max_size'] = '2000';
             // inisiasi config
@@ -175,7 +179,7 @@ class Admin extends CI_Controller {
 
             	if (!empty($_FILES['buku']['name'])) {
             		// upload config file
-		            $config_file['upload_path'] = 'assets/uploads/files/';
+		            $config_file['upload_path'] = 'stisla/assets/uploads/files/';
 		            $config_file['allowed_types'] = 'pdf';
 		            $config_file['max_size'] = '5000';
 		            // inisiasi config
@@ -204,11 +208,11 @@ class Admin extends CI_Controller {
 							$this->session->set_userdata('success', 'Tambah data buku berhasil!');
 							($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
 						} else {
-							$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+							$this->session->set_userdata('failed', 'Tambah data buku gagal 1!');
 							($this->input->post('no-redirect')) ? $this->buku() : $this->index();
 						}
 	            	} else {
-	            		$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+	            		$this->session->set_userdata('failed', 'Tambah data buku gagal 2!');
 						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
 	            	}
             	} else {
@@ -231,16 +235,16 @@ class Admin extends CI_Controller {
 						$this->session->set_userdata('success', 'Tambah data buku berhasil!');
 						($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
 					} else {
-						$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+						$this->session->set_userdata('failed', 'Tambah data buku gagal 3!');
 						($this->input->post('no-redirect')) ? $this->buku() : $this->index();
 					}
             	}
             } else {
-            	$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+            	$this->session->set_userdata('failed', 'Tambah data buku gagal 4!');
 				($this->input->post('no-redirect')) ? $this->buku() : $this->index();
             }
 		} else {
-			$this->session->set_userdata('failed', 'Tambah data buku gagal!');
+			$this->session->set_userdata('failed', 'Tambah data buku gagal 5!');
 			($this->input->post('no-redirect')) ? $this->buku() : $this->index();
 		}
 	}
@@ -268,7 +272,7 @@ class Admin extends CI_Controller {
 		if ($this->form_validation->run() !== false) {
 			if (!empty($_FILES['cover']['name']) && !empty($_FILES['buku']['name'])) {
 				// upload config cover
-	            $config_cover['upload_path'] = 'assets/uploads/cover/';
+	            $config_cover['upload_path'] = 'stisla/assets/uploads/cover/';
 	            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
 	            $config_cover['max_size'] = '5000';
 	            // inisiasi config cover
@@ -276,11 +280,11 @@ class Admin extends CI_Controller {
 	            // proses upload gambar
 	            if ($this->upload->do_upload('cover')) {
 	            	// hapus cover sebelumnya
-	            	unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
+	            	unlink('stisla/assets/uploads/cover/'.$detail_buku['cover_buku']);
 	            	$data_cover = $this->upload->data();
 
             		// upload config file
-		            $config_file['upload_path'] = 'assets/uploads/files/';
+		            $config_file['upload_path'] = 'stisla/assets/uploads/files/';
 		            $config_file['allowed_types'] = 'pdf';
 		            $config_file['max_size'] = '5000';
 		            // inisiasi config file
@@ -288,7 +292,7 @@ class Admin extends CI_Controller {
 
 		            if ($this->upload->do_upload('buku')) {
 		                // hapus file sebelumnya
-		            	unlink('assets/uploads/files/'.$detail_buku['file_buku']);
+		            	unlink('stisla/assets/uploads/files/'.$detail_buku['file_buku']);
 		            	$data_file = $this->upload->data();
 
 						$params = [
@@ -325,7 +329,7 @@ class Admin extends CI_Controller {
 	            }
 			} else if (!empty($_FILES['cover']['name']) && empty($_FILES['buku']['name'])) {
 				// upload config cover
-	            $config_cover['upload_path'] = 'assets/uploads/cover/';
+	            $config_cover['upload_path'] = 'stisla/assets/uploads/cover/';
 	            $config_cover['allowed_types'] = 'jpg|jpeg|png|gif';
 	            $config_cover['max_size'] = '2000';
 	            // inisiasi config cover
@@ -333,7 +337,7 @@ class Admin extends CI_Controller {
 	            // proses upload gambar
 	            if ($this->upload->do_upload('cover')) {
 	            	// hapus cover sebelumnya
-	            	unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
+	            	unlink('stisla/uploads/cover/'.$detail_buku['cover_buku']);
 	            	$data_cover = $this->upload->data();
 
 	            	$params = [
@@ -365,7 +369,7 @@ class Admin extends CI_Controller {
 				}
 			} else if (empty($_FILES['cover']['name']) && !empty($_FILES['buku']['name'])) {
 				// upload config file
-	            $config_file['upload_path'] = 'assets/uploads/files/';
+	            $config_file['upload_path'] = 'stisla/assets/uploads/files/';
 	            $config_file['allowed_types'] = 'pdf';
 	            $config_file['max_size'] = '5000';
 	            // inisiasi config file
@@ -373,7 +377,7 @@ class Admin extends CI_Controller {
 	            // proses upload gambar
 	            if ($this->upload->do_upload('buku')) {
 	            	// hapus cover sebelumnya
-	            	unlink('assets/uploads/files/'.$detail_buku['file_buku']);
+	            	unlink('stisla/assets/uploads/files/'.$detail_buku['file_buku']);
 	            	$data_file = $this->upload->data();
 
 	            	$params = [
@@ -450,8 +454,8 @@ class Admin extends CI_Controller {
 			$where = ['id_buku' => $this->input->post('id')];
 
 			if ($this->M_admin->delete_tbl_buku($where)) {
-				unlink('assets/uploads/cover/'.$detail_buku['cover_buku']);
-				unlink('assets/uploads/files/'.$detail_buku['file_buku']);
+				unlink('stisla/assets/uploads/cover/'.$detail_buku['cover_buku']);
+				unlink('stisla/assets/uploads/files/'.$detail_buku['file_buku']);
 				$this->session->set_userdata('success', 'Hapus data buku berhasil!');
 				($this->input->post('no-redirect')) ? redirect('admin/buku') : redirect('admin');
 			} else {

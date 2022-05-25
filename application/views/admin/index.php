@@ -527,8 +527,8 @@
                     <label class="col-sm-3 col-form-label">Bentuk</label>
                     <div class="col-sm-9">
                       <select name="bentuk" class="form-control select2 bentuk-buku-ubah" data-placeholder="Pilih" id="ubah-bentuk" required="">
-                        <option value="Fisik">Fisik</option>
-                        <option value="Digital">Digital</option>
+                        <option value="fisik">Fisik</option>
+                        <option value="digital">Digital</option>
                       </select>
                       <?php if (form_error('bentuk')) : ?>
                       <div class="invalid-feedback">
@@ -689,8 +689,8 @@
                     <label class="col-sm-3 col-form-label">Bentuk</label>
                     <div class="col-sm-9">
                       <select name="bentuk" class="form-control select2 bentuk-buku-ubah" id="hapus-bentuk" data-placeholder="Pilih" disabled="">
-                        <option value="Fisik">Fisik</option>
-                        <option value="Digital">Digital</option>
+                        <option value="fisik">Fisik</option>
+                        <option value="digital">Digital</option>
                       </select>
                     </div>
                   </div>

@@ -40,7 +40,7 @@ class Login extends CI_Controller {
 
 			if ($this->form_validation->run() !== false) {
 				$nis_nip = $this->input->post('nis_nip');
-				$password = $this->input->post('password');
+				$password = md5($this->input->post('password'));
 
 				// cek login
 				$cek = $this->M_login->cek(array($nis_nip, $password));
