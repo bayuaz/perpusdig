@@ -964,14 +964,13 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('nis_nip','NIS/NIP Pengguna', 'trim|required');
 		$this->form_validation->set_rules('nama','Nama Pengguna', 'trim|required');
 		$this->form_validation->set_rules('pass','Password Pengguna', 'trim|required');
-		$this->form_validation->set_rules('email','Email Pengguna', 'trim|required');
 		$this->form_validation->set_rules('nohp','No. HP Pengguna', 'trim|required');
 
 		if ($this->form_validation->run() !== false) {
 			$params = [
 				'id_level' => $this->input->post('level'),
 				'nis_nip_pengguna' => $this->input->post('nis_nip'),
-				'pass_pengguna' => $this->input->post('pass'),
+				'pass_pengguna' => md5($this->input->post('pass')),
 				'nama_pengguna' => $this->input->post('nama'),
 				'email_pengguna' => $this->input->post('email'),
 				'nohp_pengguna' => $this->input->post('nohp'),
@@ -986,6 +985,10 @@ class Admin extends CI_Controller {
 
 			if ($this->input->post('alamat') != '<p></p>' || $this->input->post('alamat') != '') {
 				$params['alamat_pengguna'] = $this->input->post('alamat');
+			}
+
+			if ($this->input->post('email') != '') {
+				$params['email_pengguna'] = $this->input->post('email');
 			}
 
 			if ($this->M_admin->insert_tbl_pengguna($params)) {
@@ -1007,7 +1010,6 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('nis_nip','NIS/NIP Pengguna', 'trim|required');
 		$this->form_validation->set_rules('nama','Nama Pengguna', 'trim|required');
 		$this->form_validation->set_rules('pass','Password Pengguna', 'trim|required');
-		$this->form_validation->set_rules('email','Email Pengguna', 'trim|required');
 		$this->form_validation->set_rules('nohp','No. HP Pengguna', 'trim|required');
 
 		// get input
@@ -1024,9 +1026,8 @@ class Admin extends CI_Controller {
 			$params = [
 				'id_level' => $this->input->post('level'),
 				'nis_nip_pengguna' => $this->input->post('nis_nip'),
-				'pass_pengguna' => $this->input->post('pass'),
+				'pass_pengguna' => md5($this->input->post('pass')),
 				'nama_pengguna' => $this->input->post('nama'),
-				'email_pengguna' => $this->input->post('email'),
 				'nohp_pengguna' => $this->input->post('nohp'),
 				'mdb' => $this->session->userdata('id'),
 				'mdb_name' => $this->session->userdata('nama'),
@@ -1039,6 +1040,10 @@ class Admin extends CI_Controller {
 
 			if ($this->input->post('alamat') != '<p></p>' || $this->input->post('alamat') != '') {
 				$params['alamat_pengguna'] = $this->input->post('alamat');
+			}
+
+			if ($this->input->post('email') != '') {
+				$params['email_pengguna'] = $this->input->post('email');
 			}
 
 			$where = ['id_pengguna' => $this->input->post('id')];
@@ -1205,9 +1210,13 @@ class Admin extends CI_Controller {
 
 	public function ubah_profile_proses() {
 		$this->form_validation->set_rules('nama','Nama Pengguna', 'trim|required');
-		$this->form_validation->set_rules('pass','Password Pengguna', 'trim|required');
-		$this->form_validation->set_rules('email','Email Pengguna', 'trim|required');
-		$this->form_validation->set_rules('nohp','No. HP Pengguna', 'trim|required');
+		// $this->form_validation->set_rules('pass','Password Pengguna', 'trim|required');
+		// $this->form_validation->set_rules('email','Email Pengguna', 'trim|required');
+		// $this->form_validation->set_rules('nohp','No. HP Pengguna', 'trim|required');
+
+		// print_r($_FILES);
+		// echo '<br><br>';
+		// print_r($_POST);
 
 		// get input
 		$id_pengguna = $this->input->post('id');
@@ -1226,33 +1235,99 @@ class Admin extends CI_Controller {
 		}
 
 		if ($this->form_validation->run() !== false) {
-			$params = [
-				'pass_pengguna' => $this->input->post('pass'),
-				'nama_pengguna' => $this->input->post('nama'),
-				'email_pengguna' => $this->input->post('email'),
-				'nohp_pengguna' => $this->input->post('nohp'),
-				'mdb' => $this->session->userdata('id'),
-				'mdb_name' => $this->session->userdata('nama'),
-				'mdd' => date('Y-m-d H:i:s'),
-			];
-
-			if ($this->input->post('bio') != '<p></p>' || $this->input->post('bio') != '') {
-				$params['bio_pengguna'] = $this->input->post('bio');
-			}
-
-			if ($this->input->post('alamat') != '<p></p>' || $this->input->post('alamat') != '') {
-				$params['alamat_pengguna'] = $this->input->post('alamat');
-			}
-
-			$where = ['id_pengguna' => $this->input->post('id')];
-
-			if ($this->M_admin->update_tbl_pengguna($params, $where)) {
-				$this->session->set_userdata('nama', $this->input->post('nama'));
-				$this->session->set_userdata('success', 'Ubah data profile berhasil!');
-				redirect('admin/profile');
+			if (!empty($_FILES['foto']['name'])) {
+				// upload config file
+				$config_file['upload_path'] = 'stisla/assets/uploads/profile/';
+				$config_file['allowed_types'] = 'jpg|jpeg|png|gif';
+				$config_file['max_size'] = '2000';
+				// inisiasi config
+				$this->upload->initialize($config_file);
+				
+				if ($this->upload->do_upload('foto')) {
+					// hapus cover sebelumnya
+	            	unlink('stisla/assets/uploads/profile/'.$detail_pengguna['foto_pengguna']);
+					$data_foto = $this->upload->data();
+				
+					$params = [
+						'nama_pengguna' => $this->input->post('nama'),
+						'foto_pengguna' => $data_foto['file_name'],
+						'mdb' => $this->session->userdata('id'),
+						'mdb_name' => $this->session->userdata('nama'),
+						'mdd' => date('Y-m-d H:i:s'),
+					];
+	
+					if ($this->input->post('pass') != '') {
+						$params['pass_pengguna'] = md5($this->input->post('pass'));
+					}
+	
+					if ($this->input->post('email_pengguna') != '') {
+						$params['email_pengguna'] = $this->input->post('email');
+					}
+	
+					if ($this->input->post('nohp_pengguna') != '') {
+						$params['nohp_pengguna'] = $this->input->post('nohp');
+					}
+	
+					if ($this->input->post('bio') != '<p></p>' || $this->input->post('bio') != '') {
+						$params['bio_pengguna'] = $this->input->post('bio');
+					}
+		
+					if ($this->input->post('alamat') != '<p></p>' || $this->input->post('alamat') != '') {
+						$params['alamat_pengguna'] = $this->input->post('alamat');
+					}
+		
+					$where = ['id_pengguna' => $this->input->post('id')];
+		
+					if ($this->M_admin->update_tbl_pengguna($params, $where)) {
+						$this->session->set_userdata('nama', $this->input->post('nama'));
+						$this->session->set_userdata('success', 'Ubah data profile berhasil!');
+						redirect('admin/profile');
+					} else {
+						$this->session->set_userdata('failed', 'Ubah data profile gagal!');
+						$this->profile();
+					}
+				} else {
+					$this->session->set_userdata('failed', 'Ubah data profile gagal!');
+					$this->profile();
+				}
 			} else {
-				$this->session->set_userdata('failed', 'Ubah data profile gagal!');
-				$this->profile();
+				$params = [
+					'nama_pengguna' => $this->input->post('nama'),
+					'mdb' => $this->session->userdata('id'),
+					'mdb_name' => $this->session->userdata('nama'),
+					'mdd' => date('Y-m-d H:i:s'),
+				];
+
+				if ($this->input->post('pass') != '') {
+					$params['pass_pengguna'] = md5($this->input->post('pass'));
+				}
+
+				if ($this->input->post('email_pengguna') != '') {
+					$params['email_pengguna'] = $this->input->post('email');
+				}
+
+				if ($this->input->post('nohp_pengguna') != '') {
+					$params['nohp_pengguna'] = $this->input->post('nohp');
+				}
+
+				if ($this->input->post('bio') != '<p></p>' || $this->input->post('bio') != '') {
+					$params['bio_pengguna'] = $this->input->post('bio');
+				}
+	
+				if ($this->input->post('alamat') != '<p></p>' || $this->input->post('alamat') != '') {
+					$params['alamat_pengguna'] = $this->input->post('alamat');
+				}
+	
+				$where = ['id_pengguna' => $this->input->post('id')];
+	
+				if ($this->M_admin->update_tbl_pengguna($params, $where)) {
+					$this->session->set_userdata('nama', $this->input->post('nama'));
+					$this->session->set_userdata('success', 'Ubah data profile berhasil!');
+					redirect('admin/profile');
+				} else {
+					$this->session->set_userdata('failed', 'Ubah data profile gagal!');
+					$this->profile();
+				}
 			}
 		} else {
 			$this->session->set_userdata('failed', 'Ubah data profile gagal!');

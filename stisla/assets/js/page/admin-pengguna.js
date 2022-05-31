@@ -17,13 +17,21 @@ $(document).ready(function() {
   	});
 
   	$('.ubah-pengguna').click(function() {
+		var nohp;
+
+		if ($(this).data('nohp') == '') {
+			nohp = '+62';
+		} else {
+			nohp = $(this).data('nohp');
+		}
+
 	    $('#ubah-id').val($(this).data('id')).change();
 	    $('#ubah-level').val($(this).data('level')).change();
 	    $('#ubah-nis-nip').val($(this).data('nis-nip')).change();
 	    $('#ubah-nama').val($(this).data('nama')).change();
 	    $('#ubah-pass').val($(this).data('pass')).change();
 	    $('#ubah-email').val($(this).data('email')).change();
-	    $('#ubah-nohp').val($(this).data('nohp')).change();
+	    $('#ubah-nohp').val(nohp).change();
 	    $('#ubah-bio').summernote('code', $(this).data('bio'));
 	    $('#ubah-alamat').summernote('code', $(this).data('alamat'));
   	});

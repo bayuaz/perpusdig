@@ -58,7 +58,8 @@
               <div class="col-12 col-md-12 col-lg-5">
                 <div class="card profile-widget">
                   <div class="profile-widget-header">
-                    <img alt="image" src="<?= base_url('stisla/assets/img/avatar/avatar-1.png') ?>" class="rounded-circle profile-widget-picture">
+                    <?php $foto = isset($detail_user['foto_pengguna']) ? 'uploads/profile/'.$detail_user['foto_pengguna'] : 'img/avatar/avatar-1.png'; ?>
+                    <img alt="image" src="<?= base_url('stisla/assets/'.$foto) ?>" class="rounded-circle profile-widget-picture">
                     <div class="profile-widget-items">
                       <div class="profile-widget-item">
                         <div class="profile-widget-item-label"><?= $detail_user['id_level'] == '4' ? 'NIS' : 'NIP'; ?></div>
@@ -114,47 +115,26 @@
                         </div>
                         <div class="form-group col-md-6 col-12">
                           <label>Password</label>
-                          <input type="password" name="pass" class="form-control" value="<?= $detail_user['pass_pengguna'] ?>" autocomplete="off" required="">
-                          <?php if (form_error('pass')) : ?>
-                          <div class="invalid-feedback">
-                            Password Pengguna wajib diisi!
-                          </div>
-                          <?php else : ?>
-                          <div class="invalid-feedback">
-                            Password Pengguna wajib diisi!
-                          </div>
-                          <?php endif; ?>
-                          <div class="valid-feedback"></div>
+                          <input type="password" name="pass" class="form-control" value="" autocomplete="off">
+                          <div class="valid-feedback">Kosongkan jika tidak ada perubahan!</div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="form-group col-md-7 col-12">
                           <label>Email</label>
-                          <input type="email" name="email" class="form-control" value="<?= $detail_user['email_pengguna'] ?>" autocomplete="off" required="">
-                          <?php if (form_error('email')) : ?>
-                          <div class="invalid-feedback">
-                            Email Pengguna wajib diisi!
-                          </div>
-                          <?php else : ?>
-                          <div class="invalid-feedback">
-                            Email Pengguna wajib diisi!
-                          </div>
-                          <?php endif; ?>
+                          <input type="email" name="email" class="form-control" value="<?= $detail_user['email_pengguna'] ?>" autocomplete="off">
                           <div class="valid-feedback"></div>
                         </div>
                         <div class="form-group col-md-5 col-12">
                           <label>No. HP</label>
-                          <input type="text" name="nohp" class="form-control" value="<?= $detail_user['nohp_pengguna'] ?>" autocomplete="off" required="" onkeypress="return isNumberKey(event)">
-                          <?php if (form_error('nohp')) : ?>
-                          <div class="invalid-feedback">
-                            No. HP Pengguna wajib diisi!
-                          </div>
-                          <?php else : ?>
-                          <div class="invalid-feedback">
-                            No. HP Pengguna wajib diisi!
-                          </div>
-                          <?php endif; ?>
+                          <input type="text" name="nohp" class="form-control" value="<?= $detail_user['nohp_pengguna'] ?>" autocomplete="off" onkeypress="return isNumberKey(event)">
                           <div class="valid-feedback"></div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-12">
+                          <label>Foto</label>
+                          <input type="file" name="foto" class="form-control" accept="image/png, image/gif, image/jpeg">
                         </div>
                       </div>
                       <div class="row">

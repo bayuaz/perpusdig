@@ -194,7 +194,7 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Email</label>
                     <div class="col-sm-9">
-                      <input type="email" name="email" class="form-control" required="" autocomplete="off" value="<?= set_value('email') ?>">
+                      <input type="email" name="email" class="form-control" autocomplete="off" value="<?= set_value('email') ?>">
                       <?php if (form_error('email')) : ?>
                       <div class="invalid-feedback">
                         Email Pengguna wajib diisi!
@@ -204,7 +204,7 @@
                         Email Pengguna wajib diisi!
                       </div>
                       <?php endif; ?>
-                      <div class="valid-feedback"></div>
+                      <div class="valid-feedback">Kosongkan jika tidak ada!</div>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -330,33 +330,15 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Email</label>
                     <div class="col-sm-9">
-                      <input type="email" name="email" class="form-control" id="ubah-email" required="" autocomplete="off" value="<?= set_value('email') ?>">
-                      <?php if (form_error('email')) : ?>
-                      <div class="invalid-feedback">
-                        Email Pengguna wajib diisi!
-                      </div>
-                      <?php else : ?>
-                      <div class="invalid-feedback">
-                        Email Pengguna wajib diisi!
-                      </div>
-                      <?php endif; ?>
+                      <input type="email" name="email" class="form-control" id="ubah-email" autocomplete="off" value="<?= set_value('email') ?>">
                       <div class="valid-feedback"></div>
                     </div>
                   </div>
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">No. HP</label>
                     <div class="col-sm-9">
-                      <input type="text" name="nohp" class="form-control" id="ubah-nohp" required="" autocomplete="off" value="<?= set_value('nohp') ?>" onkeypress="return isNumberKey(event)">
-                      <?php if (form_error('nohp')) : ?>
-                      <div class="invalid-feedback">
-                        No. HP Pengguna wajib diisi dan berawalan +62!
-                      </div>
-                      <?php else : ?>
-                      <div class="invalid-feedback">
-                       No. HP Pengguna wajib diisi dan berawalan +62!
-                      </div>
-                      <?php endif; ?>
-                      <div class="valid-feedback"></div>
+                      <input type="text" name="nohp" class="form-control" id="ubah-nohp" autocomplete="off" value="<?= set_value('nohp') ?>" onkeypress="return isNumberKey(event)">
+                      <div class="valid-feedback">No. HP harus berawalan +62!</div>
                     </div>
                   </div>
                   <div class="form-group row mb-0">

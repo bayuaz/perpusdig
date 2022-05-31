@@ -11,7 +11,7 @@
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/izitoast/dist/css/iziToast.min.css') ?>">
-  <?php if ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses' || $this->uri->uri_string() == 'admin/profile') : ?>
+  <?php if ($this->uri->uri_string() == 'admin/kategori' || $this->uri->uri_string() == 'admin/tambah_kategori_proses' || $this->uri->uri_string() == 'admin/ubah_kategori_proses' || $this->uri->uri_string() == 'admin/hapus_kategori_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses' || $this->uri->uri_string() == 'admin/level' || $this->uri->uri_string() == 'admin/tambah_level_proses' || $this->uri->uri_string() == 'admin/ubah_level_proses' || $this->uri->uri_string() == 'admin/hapus_level_proses' || $this->uri->uri_string() == 'admin/profile' || $this->uri->uri_string() == 'admin/ubah_profile_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/summernote/dist/summernote-bs4.css') ?>">
   <?php endif; ?>
   <?php if ($this->uri->uri_string() == 'admin' || $this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses' || $this->uri->uri_string() == 'admin/pengguna' || $this->uri->uri_string() == 'admin/tambah_pengguna_proses' || $this->uri->uri_string() == 'admin/ubah_pengguna_proses' || $this->uri->uri_string() == 'admin/hapus_pengguna_proses') : ?>
@@ -24,7 +24,7 @@
   <?php if ($this->uri->uri_string() == 'admin/buku' || $this->uri->uri_string() == 'admin/tambah_buku_proses' || $this->uri->uri_string() == 'admin/ubah_buku_proses' || $this->uri->uri_string() == 'admin/hapus_buku_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/chocolat/dist/css/chocolat.css') ?>">
   <?php endif; ?>
-  <?php if ($this->uri->uri_string() == 'admin/profile') : ?>
+  <?php if ($this->uri->uri_string() == 'admin/profile' || $this->uri->uri_string() == 'admin/ubah_profile_proses') : ?>
   <link rel="stylesheet" href="<?= base_url('stisla/node_modules/bootstrap-social/bootstrap-social.css') ?>">
   <?php endif; ?>
 
@@ -64,7 +64,8 @@
         </form>
         <ul class="navbar-nav navbar-right">
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-            <img alt="image" src="<?= base_url('stisla/assets/img/avatar/avatar-1.png') ?>" class="rounded-circle mr-1">
+            <?php $foto = isset($detail_user_header['foto_pengguna']) ? 'uploads/profile/'.$detail_user_header['foto_pengguna'] : 'img/avatar/avatar-1.png'; ?>
+            <img alt="image" src="<?= base_url('stisla/assets/'.$foto) ?>" class="rounded-circle mr-1">
             <div class="d-sm-none d-lg-inline-block">Hi, <?= $detail_user_header['nama_pengguna'] ?></div></a>
             <div class="dropdown-menu dropdown-menu-right">
               <?php 
