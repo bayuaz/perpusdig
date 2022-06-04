@@ -1,1 +1,1 @@
-Aplikasi Website Perpustakaan Digital SMPN 1 Datuk Limapuluh
+Aplikasi Website Perpustakaan Digital
